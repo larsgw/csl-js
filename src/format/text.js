@@ -63,6 +63,7 @@ const delimiter = (self, data, {delimiter = ''}, input) => joinAsArray(input, de
 
 // NOTICE const
 const formattingAttributes = ['font-style', 'font-variant', 'font-weight', 'text-decoration', 'vertical-align']
+
 const formatting = (self, data, element, input) => {
   for (const attribute of formattingAttributes) {
     if (!element.hasOwnProperty(attribute) || !self._formatData[attribute]) { continue }
@@ -75,9 +76,18 @@ const formatting = (self, data, element, input) => {
 }
 
 const stripPeriods = (self, data, {'strip-periods': stripPeriods}, input) => {
+  if (stripPeriods !== 'true') { return input }
+
   // TODO
   // impossible with current middleware behaviour; can't strip periods off of
   // an element that doesn't return a string.
+
+  // BEGIN TESTING
+  if (typeof input === 'string') {
+    return input.replace(/\./g, '')
+  }
+  // END TESTING
+
   return input
 }
 
@@ -201,14 +211,27 @@ const elements = {
   },
 
   // DATE
-  // TODO attrs
-  @add()
-
+  @add({mods: [affix, delimiter, formatting, textCase]})
   date (context, data, element) {
     const value = data[element.content]
     return value ? context.formatDate(value, element) : ''
   }
 }
+
+const dateParts = {
+  @add({alias: ['day'], mods: [textCase, formatting, affix]})
+  year (context, data) {
+    return data
+  },
+
+  @add({mods: [textCase, stripPeriods, formatting, affix]})
+  month (context, data) {
+    return data
+  }
+}
+
+// FORMATTING
+// ==========
 
 Formatter.prototype.formatDate = function (date, mods) {
   // TODO date ranges
@@ -219,26 +242,22 @@ Formatter.prototype.formatDate = function (date, mods) {
 
   if (mods.localised) {
     const {form, dateParts} = mods
-    config = {}
-
     const localeConfig = this.getDateConfig(form)
+    config = {...localeConfig}
     
-    Object.assign(config, localeConfig)
     config.datePartConfig = config.datePartConfig.slice().filter(datePart => dateParts.includes(datePart.content))
     // TODO copy local datepart config
   } else {
     config = mods
   }
 
+  // NOTICE const
   const datePartOrder = ['year', 'month', 'day']
 
   return config.datePartConfig.map(datePart => {
     const {content, form} = datePart
     const value = date['date-parts'][0][datePartOrder.indexOf(content)]
-
-    // TODO
-
-    return this.formatDatePart(content, value, form)
+    return dateParts[content](this, this.formatDatePart(content, value, form), datePart)
   }).join(config.delimiter)
 }
 
@@ -260,11 +279,7 @@ Formatter.prototype.formatDatePart = function (name, value, form) {
   if (name === 'month') {
     return this.getTerm(`month-${paddedString}`, {form})
   } else if (form === 'year') {
-    if (form === 'long') {
-      return string
-    } else if (form === 'short') {
-      return string.slice(-2)
-    }
+    return form === 'short' ? string.slice(-2) : string
   }
 
   return string

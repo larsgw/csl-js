@@ -1,7 +1,32 @@
+import {applyAttributes, affix, delimiter, formatting, stripPeriods, textCase} from '../attributes'
 import {arrayToObject, xmlToObject} from '../toObject'
 import cMetadata from './info'
 
 // TODO docs
+
+const c = {
+  @applyAttributes(formatting, textCase, affix, stripPeriods)
+  datePart ({attributes}) {
+    const {name, form, 'range-delimiter': rangeDelimiter} = attributes
+    const output = {content: name}
+
+    if (form) { output.form = form }
+    if (rangeDelimiter) { output.rangeDelimiter = rangeDelimiter }
+
+    // force strip-periods to default value when it's not a month
+    if (name !== 'month') { output['strip-periods'] = stripPeriods['strip-periods'][0] }
+
+    return output
+  },
+
+  @applyAttributes(formatting, textCase, delimiter)
+  date ({attributes, children}) {
+    const {form: name, delimiter} = attributes
+    const output = {name, datePartConfig: children.map(c.datePart)}
+
+    return output
+  }
+}
 
 const cTerm = term => {
   const {name, form = 'long', match, gender, 'gender-form': genderForm} = term.attributes
@@ -23,32 +48,6 @@ const cTerm = term => {
   }
 
   return {name, form, value, genderForm}
-}
-
-// TODO formatting, text-case
-const cDatePart = datePart => {
-  const {name, form, prefix, suffix, 'range-delimiter': rangeDelimiter} = datePart.attributes
-  const output = {content: name}
-
-  if (form) { output.form = form }
-  if (prefix) { output.prefix = prefix }
-  if (suffix) { output.suffix = suffix }
-  if (rangeDelimiter) { output.rangeDelimiter = rangeDelimiter }
-  // TODO month strip-periods
-
-  return output
-}
-
-// TODO formatting, text-case
-const cDate = date => {
-  const {form: name, delimiter} = date.attributes
-  const output = {name, datePartConfig: date.children.map(cDatePart)}
-
-  if (delimiter) {
-    output.delimiter = delimiter
-  }
-
-  return output
 }
 
 const mergeTerms = terms => {
@@ -81,7 +80,7 @@ const parse = function (locale) {
     output.term = mergeTerms(elements.terms[0].children.map(cTerm))
   }
   if (elements.date) {
-    output.date = arrayToObject(elements.date.map(cDate), ({name, ...options}) => ({key: name, val: options}))
+    output.date = arrayToObject(elements.date.map(c.date), ({name, ...options}) => ({key: name, val: options}))
   }
   if (elements['style-options']) {
     output.styleOptions = elements['style-options'][0].attributes
