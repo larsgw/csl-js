@@ -1,6 +1,6 @@
 {
   "name": "csl-js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Lightweight CSL Engine",
   "main": "lib/index.js",
   "author": "Lars Willighagen",
