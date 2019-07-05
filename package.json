@@ -10,6 +10,11 @@
     "csl",
     "citeproc"
   ],
+  "files": [
+    "lib",
+    "build/csl.js",
+    "build/csl.min.js"
+  ],
   "dependencies": {
     "html-entities": "^1.2.1",
     "regenerator-runtime": "^0.13.2",
@@ -56,5 +61,6 @@
     "dist:regular": "browserify -r ./src/index.js:csl-js -o build/csl.js -g [ babelify ]",
     "dist:minify": "uglifyjs build/csl.js --ie8 -c -o build/csl.min.js",
     "dist:docs": "jsdoc ./src README.md -c .jsdoc.json"
+    "postversion": "npm run dist:files"
   }
 }
