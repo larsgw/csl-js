@@ -45,9 +45,6 @@
       "logger"
     ]
   },
-  "browser": {
-    "./src/logger.js": "./src/logger-browser.js"
-  },
   "scripts": {
     "lint": "standard",
     "coverage": "npm run coverage:test && npm run coverage:report",

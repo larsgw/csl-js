@@ -1,5 +1,6 @@
 import Formatter from './formatter'
 import conditionIsTrue from './condition'
+import logger from '../logger'
 
 const reduceStrings = list => {
   return list.reduce((array, element) => {
@@ -117,11 +118,11 @@ const textCase = (self, data, {'text-case': textCase}, input) => {
 //      wouldn't work with the logging purposes of these functions.
 
 const DEBUG_group = (self, data, element, input) => {
-  console.log(element.type, input)
+  logger.log(element.type, input)
   return input
 }
 const DEBUG_text = (self, data, element, input) => {
-  console.log(element.type, element.contentType, element.content, input)
+  logger.log(element.type, element.contentType, element.content, input)
   return input
 }
 

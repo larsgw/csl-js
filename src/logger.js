@@ -1,1 +1,3 @@
-global.logger = new console.Console(process.stderr, process.stderr)
+global.logger = console.Console
+  ? new console.Console(process.stderr, process.stderr)
+  : console
