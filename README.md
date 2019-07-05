@@ -29,29 +29,19 @@ NPM install:
 Use: (API usage below)
 
 ```js
-const parseXml = require('csl-js/lib/parse/')
-
-const locales = require('csl-js/lib/locales')
-const styles = require('csl-js/lib/styles')
-
-const Formatter = require('csl-js/lib/format/')
+const { Formatter, locales, styles } = require('csl-js')
 ```
 
 ## API
 
 ### Registering/parsing locales & styles
 
-Parse:
-
 ```js
-const parsed = parseXml(xml)
-```
+const style = await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/styles@master/apa.csl')).text()
+styles.set('apa', style)
 
-Register:
-
-```js
-locales.set(lang, parsed)
-styles.set(style, parsed)
+const style = await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text()
+locales.set('en-US', parsed)
 ```
 
 ### `Formatter`
@@ -59,13 +49,19 @@ styles.set(style, parsed)
 Create:
 
 ```js
-const formatter = new Formatter({style: '...', lang: '...', format: '...'})
+const formatter = new Formatter({
+  style: '...',
+  lang: '...',
+  format: '...'
+})
 ```
 
 Format: (data in CSL-JSON format)
 
 ```js
 formatter.formatBibliography(data)
+// (1957). Correlation of the Base Strengths of Amines 1 () []. Journal of the American Chemical Society, 79(20), 5441-5444. https://doi.org/10.1021/ja01577a030
+
 // TODO format citations
 ```
 
