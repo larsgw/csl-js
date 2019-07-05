@@ -1,3 +1,5 @@
+import parseXml from './parse'
+
 class Register {
   data = {}
 
@@ -10,7 +12,7 @@ class Register {
   }
 
   set (key, value) {
-    this.data[key] = value
+    this.data[key] = parseXml(value)
     return this
   }
 
