@@ -177,18 +177,18 @@ const elements = {
 
     if (!data.hasOwnProperty(content)) { return }
 
-    const isPlural = do {
-      if (plural === 'always') {
-        true
-      } else if (plural === 'never') {
-        false
-      } else {
-        const value = data[content]
-        // TODO not sure if those are parseInt-able
-        value.startsWith('number-of-')
-          ? parseInt(value) > 1
-          : /[-&,]/.test(value)
-      }
+    let isPlural
+
+    if (plural === 'always') {
+      isPlural = true
+    } else if (plural === 'never') {
+      isPlural = false
+    } else {
+      const value = data[content]
+      // TODO not sure if those are parseInt-able
+      isPlural = value.startsWith('number-of-')
+        ? parseInt(value) > 1
+        : /[-&,]/.test(value)
     }
 
     return context.getTerm(content, {form, plural: isPlural})
@@ -321,13 +321,9 @@ Formatter.prototype._formatChildren = function (data, children) {
 
 Formatter.prototype._format = function (data, element) {
   // TODO clean up (this is for TESTING purposes)
-  const output = do {
-    if (element && typeof elements[element.type] === 'function') {
-      elements[element.type](this, data, element)
-    } else {
-      ''
-    }
+  if (element && typeof elements[element.type] === 'function') {
+    return elements[element.type](this, data, element)
+  } else {
+    return  ''
   }
-
-  return output
 }

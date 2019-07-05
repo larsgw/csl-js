@@ -8,7 +8,7 @@ import style from './nodes/style'
 const checkNs = xml => xml
 
 const parseXml = function (input) {
-  const {root} = input |> xml |> checkNs
+  const {root} = checkNs(xml(input))
 
   switch (root.name) {
     case 'locale':
