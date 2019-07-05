@@ -11,33 +11,29 @@
     "citeproc"
   ],
   "dependencies": {
-    "@babel/polyfill": "^7.0.0-beta.31",
-    "colors": "^1.1.2",
     "html-entities": "^1.2.1",
+    "regenerator-runtime": "^0.13.2",
     "xml-parser": "^1.2.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.31",
-    "@babel/core": "^7.0.0-beta.31",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.31",
-    "@babel/plugin-proposal-decorators": "^7.0.0-beta.31",
-    "@babel/plugin-proposal-do-expressions": "^7.0.0-beta.32",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.31",
-    "@babel/plugin-proposal-pipeline-operator": "^7.0.0-beta.31",
-    "@babel/preset-env": "^7.0.0-beta.31",
-    "@babel/register": "^7.0.0-beta.31",
-    "babel-eslint": "^8.0.1",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babelify": "^7.3.0",
-    "browserify": "^14.4.0",
-    "cross-env": "^5.0.5",
-    "expect.js": "^0.3.1",
-    "jsdoc": "^3.5.5",
-    "mocha": "^4.0.1",
-    "npm-run-all": "^4.1.1",
-    "nyc": "^11.2.1",
-    "standard": "^10.0.3",
-    "uglify-es": "^3.1.3"
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.0",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-proposal-do-expressions": "^7.5.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.5.0",
+    "@babel/preset-env": "^7.5.0",
+    "@babel/register": "^7.4.4",
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-istanbul": "^5.1.4",
+    "babelify": "^10.0.0",
+    "browserify": "^16.3.0",
+    "jsdoc": "^3.6.2",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "standard": "^12.0.1",
+    "uglify-es": "^3.3.9"
   },
   "nyc": {
     "require": [
@@ -56,22 +52,15 @@
     "./src/logger.js": "./src/logger-browser.js"
   },
   "scripts": {
-    "--1--": "lint",
-    "lint:src": "standard \"src/**/*.js\"",
-    "lint:test": "standard \"test/**/*.js\"",
-    "lint": "npm-run-all lint:*",
-    "--2--": "test",
-    "coverage:test": "cross-env NODE_ENV=test nyc npm test",
+    "lint": "standard",
+    "coverage": "npm run coverage:test && npm run coverage:report",
+    "coverage:test": "NODE_ENV=test nyc npm test",
     "coverage:report": "nyc report --reporter=lcov > coverage.lcov",
-    "coverage": "npm-run-all coverage:*",
-    "--3--": "compile",
     "compile": "babel src -d lib --copy-files",
-    "--4--": "distributions",
+    "dist": "npm run dist:files && npm run dist:docs",
+    "dist:files": "npm run dist:regular && npm run dist:minify",
     "dist:regular": "browserify -r ./src/index.js:csl-js -o build/csl.js -g [ babelify ]",
     "dist:minify": "uglifyjs build/csl.js --ie8 -c -o build/csl.min.js",
-    "--5--": "generate",
-    "generate:files": "npm-run-all dist:*",
-    "generate:docs": "jsdoc ./src README.md -c .jsdoc.json",
-    "generate": "npm-run-all generate:*"
+    "dist:docs": "jsdoc ./src README.md -c .jsdoc.json"
   }
 }
