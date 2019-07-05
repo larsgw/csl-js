@@ -5,7 +5,7 @@ Lightweight CSL Engine. WIP.
 [![NPM version](https://img.shields.io/npm/v/csl-js.svg)](https://www.npmjs.org/csl-js)
 [![license](https://img.shields.io/github/license/larsgw/csl-js.svg)](https://github.com/larsgw/csl-js/blob/master/LICENSE.md)
 
-[![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
+[![JavaScript Style Guide](https://cdn.jsdelivr.net/gh/standard/standard@master/badge.svg)](https://github.com/standard/standard)
 
 ---
 
