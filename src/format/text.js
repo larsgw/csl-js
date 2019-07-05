@@ -47,15 +47,15 @@ const add = function ({mods = [], alias = []} = {}) {
 // ==================
 
 const joinAsArray = function (array, delimiter) {
-  if (array.length === 0 || array.length === 1) {
+  if (array.length === 0) {
     return array
   }
 
-  const length = 2 * array.length - 1
-  for (let i = 0; i < length; i++) {
-    if (i & 1) { array.splice(i, 0, delimiter) }
+  const joined = [array[0]]
+  for (let i = 1; i < array.length; i++) {
+    joined.push(delimiter, array[i])
   }
-  return array
+  return joined
 }
 
 const affix = (self, data, {prefix = '', suffix = ''}, input) => [].concat(prefix, input, suffix)
@@ -244,7 +244,7 @@ Formatter.prototype.formatDate = function (date, mods) {
     const {form, dateParts} = mods
     const localeConfig = this.getDateConfig(form)
     config = {...localeConfig}
-    
+
     config.datePartConfig = config.datePartConfig.slice().filter(datePart => dateParts.includes(datePart.content))
     // TODO copy local datepart config
   } else {
