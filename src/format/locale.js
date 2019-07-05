@@ -123,7 +123,7 @@ Formatter.prototype.hasTerm = function (name) {
   }
 }
 
-Formatter.prototype.getTerm = function (name, {form = 'long', gender, plural} = {}) {
+Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } = {}) {
   for (const locale of this.locales) {
     const term = locale.term[name]
 
@@ -144,7 +144,7 @@ Formatter.prototype.getTerm = function (name, {form = 'long', gender, plural} = 
   }
 }
 
-Formatter.prototype.getOrdinalSuffix = function (num, {form = 'numeric'} = {}) {
+Formatter.prototype.getOrdinalSuffix = function (num, { form = 'numeric' } = {}) {
   if (form !== 'ordinal' && form !== 'long-ordinal') {
     return ''
   }

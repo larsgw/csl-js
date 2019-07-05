@@ -27,8 +27,8 @@ export const applyAttributes = (...sets) => {
 //
 // NOTICE const?
 
-export const affix = {prefix: true, suffix: true}
-export const delimiter = {delimiter: true}
+export const affix = { prefix: true, suffix: true }
+export const delimiter = { delimiter: true }
 
 export const formatting = {
   'font-style': ['normal', 'italic', 'oblique'],
@@ -38,8 +38,8 @@ export const formatting = {
   'vertical-align': ['baseline', 'sup', 'sub']
 }
 
-export const stripPeriods = {'strip-periods': ['false', 'true']}
-export const quotes = {quotes: ['false', 'true']}
+export const stripPeriods = { 'strip-periods': ['false', 'true'] }
+export const quotes = { quotes: ['false', 'true'] }
 
 export const textCase = {
   'text-case': ['lowercase', 'uppercase', 'capitalize-first', 'capitalize-all', 'sentence', 'title']

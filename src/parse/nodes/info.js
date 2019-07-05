@@ -1,8 +1,8 @@
-import {arrayToObject, xmlToObject} from '../toObject'
+import { arrayToObject, xmlToObject } from '../toObject'
 
 // TODO docs
 
-const cAuthor = ({children}) => arrayToObject(children, ({name, content}) => ({key: name, val: content}))
+const cAuthor = ({ children }) => arrayToObject(children, ({ name, content }) => ({ key: name, val: content }))
 
 const simpleFields = ['title', 'title-short', 'id', 'summary', 'updated', 'published', 'eissn', 'issnl', 'rights']
 
@@ -20,10 +20,10 @@ const cMetadata = info => {
     target.license = elements.rights[0].attributes.license
   }
   if (elements.issn) {
-    target.issn = elements.issn.map(({content}) => content)
+    target.issn = elements.issn.map(({ content }) => content)
   }
   if (elements.link) {
-    target.link = arrayToObject(elements.link, ({attributes: {rel, href}}) => ({key: rel, val: href}))
+    target.link = arrayToObject(elements.link, ({ attributes: { rel, href } }) => ({ key: rel, val: href }))
   }
   if (elements.author) {
     target.author = elements.author.map(cAuthor)
@@ -35,9 +35,9 @@ const cMetadata = info => {
     target.translator = elements.translator.map(cAuthor)
   }
   if (elements.category) {
-    target.category = arrayToObject(elements.category, ({attributes}) => {
+    target.category = arrayToObject(elements.category, ({ attributes }) => {
       const [key, val] = Object.entries(attributes)[0]
-      return {key, val}
+      return { key, val }
     })
   }
 

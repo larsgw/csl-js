@@ -1,6 +1,6 @@
 // NOTICE CONST
 const numberRegex = /^([a-z_]*\d+\w*)((\s*[-&,]\s*)([a-z_]*\d+\w*))*$/i
-const matchToArrayMethod = {all: 'every', any: 'some', none: 'some'}
+const matchToArrayMethod = { all: 'every', any: 'some', none: 'some' }
 
 // TODO disambiguate, locator, position
 const conditionChecker = {
@@ -31,7 +31,7 @@ const conditionChecker = {
 const resultIsTrue = result => result
 
 export default function conditionIsTrue (statement, data) {
-  const {conditions, match = 'all'} = statement
+  const { conditions, match = 'all' } = statement
 
   // if no conditionals, it's the 'else' case
   if (!conditions) {

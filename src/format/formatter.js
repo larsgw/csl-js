@@ -7,7 +7,7 @@ class Formatter {
   format
   locales
 
-  constructor ({style, lang, format}) {
+  constructor ({ style, lang, format }) {
     // TODO check
     this.style = style
     this.lang = lang

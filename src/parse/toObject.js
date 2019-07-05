@@ -1,7 +1,7 @@
 // TODO docs
 
 const arrayToObject = (array, callback) => array.reduce((obj, element) => {
-  const {key, val} = callback(element)
+  const { key, val } = callback(element)
   obj[key] = val
   return obj
 }, {})
@@ -18,4 +18,4 @@ const xmlToObject = elements => {
   return json
 }
 
-export {arrayToObject, xmlToObject}
+export { arrayToObject, xmlToObject }

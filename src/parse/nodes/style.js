@@ -1,23 +1,29 @@
-import {arrayToObject, xmlToObject} from '../toObject'
+import { arrayToObject, xmlToObject } from '../toObject'
 import cMetadata from './info'
 import cLocale from './locale'
 // import cSort from './sort'
 import cLayout from './layout'
 
 // TODO docs
-const cMacro = macro => ({name: macro.attributes.name, make: cLayout(macro)})
+const cMacro = macro => ({ name: macro.attributes.name, make: cLayout(macro) })
 
 // TODO options: Citation-specific Options, Inheritable name options
 // TODO casing note styles
 const cCitation = citation => {
-  const {/*sort: [sort], */layout: [layout]} = xmlToObject(citation.children)
-  return {/*sort: cSort(sort), */layout: cLayout(layout)}
+  const children = xmlToObject(citation.children)
+  return {
+    // sort: cSort(children.sort[0]),
+    layout: cLayout(children.layout[0])
+  }
 }
 
 // TODO options: Bibliography-specific Options
 const cBibliography = bibliography => {
-  const {/*sort: [sort], */layout: [layout]} = xmlToObject(bibliography.children)
-  return {/*sort: cSort(sort), */layout: cLayout(layout)}
+  const children = xmlToObject(bibliography.children)
+  return {
+    // sort: cSort(children.sort[0]),
+    layout: cLayout(children.layout[0])
+  }
 }
 
 // TODO root-level config
@@ -31,11 +37,11 @@ const parse = function (style) {
     : {}
 
   output.locale = elements.locale
-    ? arrayToObject(elements.locale.map(cLocale), locale => ({key: locale.lang, val: locale}))
+    ? arrayToObject(elements.locale.map(cLocale), locale => ({ key: locale.lang, val: locale }))
     : {}
 
   output.macro = elements.macro
-    ? arrayToObject(elements.macro.map(cMacro), ({name, make}) => ({key: name, val: make}))
+    ? arrayToObject(elements.macro.map(cMacro), ({ name, make }) => ({ key: name, val: make }))
     : {}
 
   output.citation = elements.citation

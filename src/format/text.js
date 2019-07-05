@@ -33,7 +33,8 @@ const add = function ({mods = [], alias = []} = {}) {
         output = output.length ? reduceStrings(output) : ''
       }
 
-      return output
+      // return `<span data-node="${key}">${output}</span>`
+      return output + ''
     }
 
     for (const prop of alias) {
