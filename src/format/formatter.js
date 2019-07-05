@@ -24,6 +24,10 @@ class Formatter {
     return this._format(data, this._style.bibliography.layout)
   }
 
+  formatCitation (data) {
+    return this._format(data, this._style.citation.layout)
+  }
+
   sort (data, mode) {
     // TODO
   }

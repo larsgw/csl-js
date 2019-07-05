@@ -62,7 +62,8 @@ Format: (data in CSL-JSON format)
 formatter.formatBibliography(data)
 // (1957). Correlation of the Base Strengths of Amines 1 () []. Journal of the American Chemical Society, 79(20), 5441-5444. https://doi.org/10.1021/ja01577a030
 
-// TODO format citations
+formatter.formatCitation(data)
+// (1957)
 ```
 
 ## Features
