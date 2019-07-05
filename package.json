@@ -60,7 +60,7 @@
     "dist:files": "npm run dist:regular && npm run dist:minify",
     "dist:regular": "browserify -r ./src/index.js:csl-js -o build/csl.js -g [ babelify ]",
     "dist:minify": "uglifyjs build/csl.js --ie8 -c -o build/csl.min.js",
-    "dist:docs": "jsdoc ./src README.md -c .jsdoc.json"
+    "dist:docs": "jsdoc -c .jsdoc.json",
     "postversion": "npm run dist:files"
   }
 }

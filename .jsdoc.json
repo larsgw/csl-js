@@ -4,10 +4,14 @@
     "allowUnknownTags": true,
     "dictionaries": ["jsdoc", "closure"]
   },
+  "source": {
+    "include": ["src"]
+  },
   "opts": {
     "template": "templates/default",
     "encoding": "utf8",
-    "destination": "docs/api",
+    "readme": "./README.md",
+    "destination": "jsdoc",
     "recurse": true
   },
   "templates": {
@@ -18,4 +22,4 @@
     "cleverLinks": false,
     "monospaceLinks": false
   }
-} 
+}
