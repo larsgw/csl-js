@@ -65,13 +65,12 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
   // http://docs.citationstyles.org/en/stable/specification.html#locale-fallback
   // Accessed 2017-11-11, CSL spec 1.0.1
 
-  // First the style-specific locales
+  // Locales for the style
+  // =====================
 
-  // If the main locale is a language (e.g. 'en'), use the primary
+  // Use the style-specific locale for the dialect (e.g. 'en-GB'), or, if
+  // if the main locale is a language (e.g. 'en'), use the primary
   // dialect ('en-US').
-  //
-  // Else main locale is dialect (e.g. 'en-GB'). Use that dialect,
-  // and the corresponding language
   if (dialect === language) {
     if (styleLocales.hasOwnProperty(primaryDialect)) {
       localeFallbackRoute.push(styleLocales[primaryDialect])
@@ -80,25 +79,30 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
     if (styleLocales.hasOwnProperty(dialect)) {
       localeFallbackRoute.push(styleLocales[dialect])
     }
-    if (styleLocales.hasOwnProperty(language)) {
-      localeFallbackRoute.push(styleLocales[language])
-    }
   }
 
-  // Always push the style-default locale
+  // Always use the default & langauge-style locales for the style
+  if (styleLocales.hasOwnProperty(language)) {
+    localeFallbackRoute.push(styleLocales[language])
+  }
   if (styleLocales.hasOwnProperty('undefined')) {
     localeFallbackRoute.push(styleLocales.undefined)
   }
 
   // General locales
+  // ===============
+
+  // Use the dialect locale
   if (locales.has(dialect)) {
     localeFallbackRoute.push(locales.get(dialect))
   }
 
-  // if dialect is a secondary dialect
+  // Use the primary dialect if the chosen dialect is a secondary dialect
   if (primaryDialect !== dialect && locales.has(primaryDialect)) {
     localeFallbackRoute.push(locales.get(primaryDialect))
   }
+
+  // Always fall back to the 'en-US' locale (if it wasn't chosen already)
   if (dialect !== 'en-US' && primaryDialect !== 'en-US' && locales.has('en-US')) {
     localeFallbackRoute.push(locales.get('en-US'))
   }
