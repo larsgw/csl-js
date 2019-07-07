@@ -28,7 +28,6 @@
     "@babel/preset-env": "^7.5.0",
     "@babel/register": "^7.4.4",
     "babel-eslint": "^10.0.2",
-    "babel-plugin-istanbul": "^5.1.4",
     "babelify": "^10.0.0",
     "browserify": "^16.3.0",
     "jsdoc": "^3.6.2",
@@ -36,13 +35,6 @@
     "nyc": "^14.1.1",
     "standard": "^12.0.1",
     "uglify-es": "^3.3.9"
-  },
-  "nyc": {
-    "require": [
-      "babel-register"
-    ],
-    "sourceMap": false,
-    "instrument": false
   },
   "standard": {
     "parser": "babel-eslint",
@@ -52,8 +44,9 @@
   },
   "scripts": {
     "lint": "standard",
+    "test": "mocha -c -r @babel/register -R dot test/index.spec.js",
     "coverage": "npm run coverage:test && npm run coverage:report",
-    "coverage:test": "NODE_ENV=test nyc npm test",
+    "coverage:test": "nyc npm test",
     "coverage:report": "nyc report --reporter=lcov > coverage.lcov",
     "compile": "babel src -d lib --copy-files",
     "dist": "npm run dist:files && npm run dist:docs",
