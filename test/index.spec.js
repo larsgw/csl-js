@@ -20,6 +20,19 @@ function parse (text) {
   return fixture
 }
 
+function format (formatter, mode, data) {
+  switch (mode) {
+    case 'bibliography':
+      return `<div class="csl-bib-body">
+  ${data.map(entry => `<div class="csl-bib-entry">${formatter.formatBibliography(entry)}</div>`).join(`
+  `)}
+</div>`
+
+    case 'citation':
+      return data.map(entry => formatter.formatCitation(entry)).join('')
+  }
+}
+
 const ROOT_PATH = path.join(__dirname, '../fixtures/processor-tests/humans')
 
 describe('fixtures', function () {
@@ -38,10 +51,7 @@ describe('fixtures', function () {
     it(fixtureName, function () {
       styles.add(fixtureName, fixture.csl)
       const engine = new Formatter({ style: fixtureName, lang: 'en-US', format: 'html' })
-      const data = JSON.parse(fixture.input)
-      const result = data.map(entry => fixture.mode === 'bibliography'
-        ? engine.formatBibliography(entry)
-        : engine.formatCitation(entry)).join('')
+      const result = format(engine, fixture.mode, JSON.parse(fixture.input))
       assert.strictEqual(result, fixture.result)
     })
   }
