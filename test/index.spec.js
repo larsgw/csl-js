@@ -26,12 +26,14 @@ describe('fixtures', function () {
   for (let fixturePath of fs.readdirSync(ROOT_PATH)) {
     const fixtureName = path.basename(fixturePath, path.extname(fixturePath))
     const fixture = parse(fs.readFileSync(path.join(ROOT_PATH, fixturePath), 'utf8'))
+
     if ([
       'bibentries',
       'bibsection',
       'citation-items',
       'citations'
     ].some(section => section in fixture)) continue
+    else if (!['bibliography', 'citation'].includes(fixture.mode)) continue
 
     it(fixtureName, function () {
       styles.add(fixtureName, fixture.csl)
