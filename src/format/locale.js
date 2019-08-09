@@ -137,7 +137,7 @@ Formatter.prototype.hasTerm = function (name) {
 
 Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } = {}) {
   for (const locale of this.locales) {
-    const term = locale.term[name]
+    const term = locale.term?.[name]
 
     if (!term) {
       continue
