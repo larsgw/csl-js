@@ -56,6 +56,8 @@ const parse = function (style) {
     ? cBibliography(elements.bibliography[0])
     : {}
 
+  Object.assign(output, style.attributes)
+
   return output
 }
 

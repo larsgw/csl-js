@@ -67,7 +67,7 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
   const language = dialect.split('-')[0]
   const primaryDialect = primaryDialects[language]
 
-  const styleLocales = (styles.get(this.style) || {}).locale || {}
+  const styleLocales = styles.get(this.style)?.locale || {}
 
   // Below code should work as described in:
   // http://docs.citationstyles.org/en/stable/specification.html#locale-fallback
@@ -137,11 +137,11 @@ Formatter.prototype.hasTerm = function (name) {
 
 Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } = {}) {
   for (const locale of this.locales) {
-    const term = locale.term?.[name]
-
-    if (!term) {
+    if (!(locale.term && name in locale.term)) {
       continue
     }
+
+    const term = locale.term[name]
 
     // TODO matching
 

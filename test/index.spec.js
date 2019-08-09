@@ -56,7 +56,7 @@ describe('fixtures', function () {
 
     it(fixtureName, function () {
       styles.add(fixtureName, fixture.csl)
-      const engine = new Formatter({ style: fixtureName, lang: 'en-US', format: 'html' })
+      const engine = new Formatter({ style: fixtureName, format: 'html' })
       const result = format(engine, fixture.mode, JSON.parse(fixture.input))
       assert.strictEqual(result, fixture.result)
     })
