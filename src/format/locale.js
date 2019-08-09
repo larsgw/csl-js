@@ -150,7 +150,7 @@ Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } 
     const value = (gender && term[gender]) || term[form]
 
     if (value) {
-      return plural !== undefined ? (plural ? value.multiple : value.single) : value.content
+      return (plural ? value.multiple : value.single) || value.content || ''
     }
   }
 

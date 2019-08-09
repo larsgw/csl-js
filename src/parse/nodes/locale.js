@@ -36,7 +36,7 @@ const cTerm = term => {
     const {single, multiple} = xmlToObject(term.children)
     value.single = single[0].content
     value.multiple = multiple[0].content
-  } else if (term.content) {
+  } else if ('content' in term) {
     value.content = term.content
   }
 
