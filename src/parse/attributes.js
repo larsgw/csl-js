@@ -1,23 +1,3 @@
-export const applyAttributes = (...sets) => {
-  const set = Object.assign({}, ...sets)
-  return (target, key, descriptor) => {
-    const parser = descriptor.value
-    descriptor.value = element => {
-      const output = {}
-      for (const prop in set) {
-        if (element.attributes.hasOwnProperty(prop)) {
-          // TODO check values
-          // TODO default values
-          output[prop] = element.attributes[prop]
-        }
-      }
-      return Object.assign(output, parser(element))
-    }
-
-    return descriptor
-  }
-}
-
 // GENERAL ATTRIBUTES
 // ==================
 //
@@ -27,20 +7,46 @@ export const applyAttributes = (...sets) => {
 //
 // NOTICE const?
 
-export const affix = { prefix: true, suffix: true }
-export const delimiter = { delimiter: true }
+export const ATTR = {
+  affix: { prefix: true, suffix: true },
+  delimiter: { delimiter: true },
 
-export const formatting = {
-  'font-style': ['normal', 'italic', 'oblique'],
-  'font-variant': ['normal', 'small-caps'],
-  'font-weight': ['normal', 'bold', 'light'],
-  'text-decoration': ['none', 'underline'],
-  'vertical-align': ['baseline', 'sup', 'sub']
+  formatting: {
+    'font-style': ['normal', 'italic', 'oblique'],
+    'font-variant': ['normal', 'small-caps'],
+    'font-weight': ['normal', 'bold', 'light'],
+    'text-decoration': ['none', 'underline'],
+    'vertical-align': ['baseline', 'sup', 'sub']
+  },
+
+  stripPeriods: { 'strip-periods': ['false', 'true'] },
+  quotes: { quotes: ['false', 'true'] },
+
+  textCase: {
+    'text-case': ['lowercase', 'uppercase', 'capitalize-first', 'capitalize-all', 'sentence', 'title']
+  }
 }
 
-export const stripPeriods = { 'strip-periods': ['false', 'true'] }
-export const quotes = { quotes: ['false', 'true'] }
+export function attributes (...sets) {
+  const set = Object.assign({}, ...sets)
+  return (target, key, descriptor) => {
+    const parser = descriptor.value
+    descriptor.value = element => {
+      const output = {}
 
-export const textCase = {
-  'text-case': ['lowercase', 'uppercase', 'capitalize-first', 'capitalize-all', 'sentence', 'title']
+      for (const prop in set) {
+        if (element.attributes.hasOwnProperty(prop)) {
+          const value = element.attributes[prop]
+          if (set[prop] === true || set[prop].includes(value)) {
+            output[prop] = value
+            continue
+          }
+        }
+      }
+
+      return Object.assign(output, parser(element))
+    }
+
+    return descriptor
+  }
 }

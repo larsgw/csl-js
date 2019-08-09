@@ -56,7 +56,7 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
   const localeFallbackRoute = []
 
   const dialect = this.lang
-  const language = dialect.replace(/-.+$/, '')
+  const language = dialect.split('-')[0]
   const primaryDialect = primaryDialects[language]
 
   const styleLocales = (styles.get(this.style) || {}).locale || {}

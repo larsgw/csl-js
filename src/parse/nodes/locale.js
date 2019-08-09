@@ -1,11 +1,11 @@
-import {applyAttributes, affix, delimiter, formatting, stripPeriods, textCase} from '../attributes'
+import { attributes, ATTR } from '../attributes'
 import {arrayToObject, xmlToObject} from '../toObject'
 import cMetadata from './info'
 
 // TODO docs
 
 const c = {
-  @applyAttributes(formatting, textCase, affix, stripPeriods)
+  @attributes(ATTR.formatting, ATTR.textCase, ATTR.affix, ATTR.stripPeriods)
   datePart ({attributes}) {
     const {name, form, 'range-delimiter': rangeDelimiter} = attributes
     const output = {content: name}
@@ -14,12 +14,12 @@ const c = {
     if (rangeDelimiter) { output.rangeDelimiter = rangeDelimiter }
 
     // force strip-periods to default value when it's not a month
-    if (name !== 'month') { output['strip-periods'] = stripPeriods['strip-periods'][0] }
+    if (name !== 'month') { output['strip-periods'] = ATTR.stripPeriods['strip-periods'][0] }
 
     return output
   },
 
-  @applyAttributes(formatting, textCase, delimiter)
+  @attributes(ATTR.formatting, ATTR.textCase, ATTR.delimiter)
   date ({attributes, children}) {
     const {form: name, delimiter} = attributes
     const output = {name, datePartConfig: children.map(c.datePart)}

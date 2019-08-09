@@ -2,7 +2,10 @@ import { arrayToObject, xmlToObject } from '../toObject'
 import cMetadata from './info'
 import cLocale from './locale'
 // import cSort from './sort'
+
 import cLayout from './layout'
+import './date'
+import './choose'
 
 // TODO docs
 const cMacro = macro => ({ name: macro.attributes.name, make: cLayout(macro) })

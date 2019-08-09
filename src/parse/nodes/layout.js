@@ -1,4 +1,4 @@
-import {applyAttributes, affix, delimiter, formatting, stripPeriods, quotes, textCase} from '../attributes'
+import { attributes, ATTR } from '../attributes'
 
 // SPECIFIC ATTRIBUTES
 // ===================
@@ -14,30 +14,11 @@ const textTermFormValues = ['long', 'short', 'verb', 'verb-short', 'symbol']
 
 const numberFormValues = ['numeric', 'ordinal', 'long-ordinal', 'roman']
 
-const dateFormValues = ['numeric', 'text']
-const datePartsValues = ['year-month-day', 'year-month', 'year']
-const datePartFormValues = {
-  day: ['numeric', 'numeric-leading-zeros', 'ordinal'],
-  month: ['long', 'short', 'numeric', 'numeric-leading-zeros'],
-  year: ['long', 'short']
-}
-
 // ELEMENTS
 // ========
 
-const elements = {
-  // LAYOUT
-  // ======
-
-  /**
-   * layout
-   * content: children
-   * options: affix, delimiter, formatting
-   */
-  @applyAttributes(affix, delimiter, formatting)
-  layout (layout) {
-    return {content: layout.children.map(cElement)}
-  },
+export const renderingElements = {
+  __context: 'renderingElements',
 
   // GROUP
   // =====
@@ -49,9 +30,9 @@ const elements = {
    * NOTE: omit if all cs:text s that call variables are empty
    */
   // TODO display
-  @applyAttributes(affix, delimiter, formatting)
+  @attributes(ATTR.affix, ATTR.delimiter, ATTR.formatting)
   group (group) {
-    return {content: group.children.map(cElement)}
+    return {content: group.children.map(compileRenderingElements)}
   },
 
   // TEXT
@@ -63,7 +44,7 @@ const elements = {
    * options: affix, formatting, display, quotes, strip-periods, text-case
    */
   // TODO display
-  @applyAttributes(affix, formatting, stripPeriods, quotes, textCase)
+  @attributes(ATTR.affix, ATTR.formatting, ATTR.stripPeriods, ATTR.quotes, ATTR.textCase)
   text ({attributes}) {
     const output = {}
 
@@ -95,7 +76,7 @@ const elements = {
    * options: affix, formatting, text-case, strip-periods
    * NOTE: empty if variable is
    */
-  @applyAttributes(affix, formatting, stripPeriods, textCase)
+  @attributes(ATTR.affix, ATTR.formatting, ATTR.stripPeriods, ATTR.textCase)
   label ({attributes}) {
     const output = {content: attributes.variable}
     if (labelFormValues.includes(attributes.form)) {
@@ -119,150 +100,49 @@ const elements = {
    * NOTE: if affixes, don't use 'form'
    */
   // TODO display
-  @applyAttributes(affix, formatting, textCase)
+  @attributes(ATTR.affix, ATTR.formatting, ATTR.textCase)
   number ({attributes}) {
     const output = {content: attributes.variable}
     if (numberFormValues.includes(attributes.form)) {
       output.form = attributes.form
     }
     return output
-  },
+  }
+}
 
-  // DATE
-  // ====
+export const compileRenderingElements = compileElement(renderingElements)
 
-  /**
-   * date
-   * content: variable
-   * special: form, children, date-parts
-   * options: affix, display, formatting, text-case
-   * NOTE: if no form, then non-localised
-   * NOTE: if non-localised, use delimiter
-   */
-  // TODO display
-  @applyAttributes(affix, delimiter, formatting, textCase)
-  date ({attributes, children}) {
-    const localised = attributes.form && dateFormValues.includes(attributes.form)
-    const output = {localised, content: attributes.variable}
+const layoutElements = {
+  __context: 'layoutElements',
 
-    if (localised) {
-      output.form = attributes.form
-      // If non-localised, don't use delimiter
-      output.delimiter = ''
-
-      if (datePartsValues.includes(attributes['date-parts'])) {
-        output.dateParts = attributes['date-parts']
-      } else {
-        output.dateParts = datePartsValues[0]
-      }
-    }
-
-    output.datePartConfig = children.map(cElement)
-    return output
-  },
-
-  /**
-   * date-part
-   * content: name
-   * special: form, range-delimiter
-   * options: affix, formatting, text-case
-   * NOTE: no affixes when localised
-   * NOTE: strip-periods on month
-   */
-  @applyAttributes(affix, formatting, textCase, stripPeriods)
-  'date-part' ({attributes}) {
-    const content = attributes.name
-    const output = {
-      content,
-      rangeDelimiter: attributes['range-delimiter'] || /* NOTICE const */ '–'
-    }
-
-    if (datePartFormValues[content].includes(attributes.form)) {
-      output.form = attributes.form
-    }
-
-    if (content !== 'month') {
-      output['strip-periods'] = 'false'
-    }
-
-    return output
-  },
-
-  /**
-   * names
-   * content: variable, children
-   * options: delimiter
-   * NOTE: render independently
-   * NOTE: if editor & translator, and equal content, merge
-   * NOTE: use 'editortranslator' term if editor & translator & cs:label
-   *
-   *   name
-   *   TODO
-   *
-   *   name-part
-   *   special: name (given | family)
-   *   NOTE: 1 or 2
-   *   NOTE: formatting, textcase: given = given, dropping-particle; family = family, non-dropping-particle
-   *   NOTE: affixes: given = given (+ dropping-particle for inverted names); family = family, non-dropping-particle (+ suffix for non-inverted names)
-   *
-   *   et-al
-   *   special: term
-   *   options: formatting
-   *
-   *   label
-   *   content: variable (inherit)
-   *   special: form, plural
-   *   options: affix, formatting, text-case, strip-periods
-   *   NOTE: empty if variable is
-   *   NOTE: between (name & et-al) and substitute
-   *
-   *   substitute
-   *   content: children
-   *   NOTE: shorthand cs:names would inherit from cs:name & cs:et-al
-   *   NOTE: uses only or first non-empty rendering element
-   *   NOTE: suppresses substituted variables
-   */
-
-  // CHOOSE
+  // LAYOUT
   // ======
 
   /**
-   * choose
-   * content: if | else-if | else
-   * conditions: disambiguate, is-numeric, is-uncertain-date, locator, position, type, variable
-   * match: all | any | none
+   * layout
+   * content: children
+   * options: affix, delimiter, formatting
    */
-  choose ({children}) {
-    return {content: children.map(cElement)}
-  },
-
-  if ({attributes: {match, ...conditions}, children}) {
-    return {content: children.map(cElement), match, conditions}
-  },
-
-  // parse as 'if' node
-  'else-if' (element) {
-    return elements.if(element)
-  },
-
-  else ({children}) {
-    return {content: children.map(cElement)}
+  @attributes(ATTR.affix, ATTR.delimiter, ATTR.formatting)
+  layout ({ children }) {
+    return { content: children.map(compileRenderingElements) }
   },
 
   // MACRO
   // =====
   macro (macro) {
-    return elements.layout(macro)
+    return layoutElements.layout(macro)
   }
 }
 
-export default function cElement (element) {
-  // TODO catch invalid node names
-  // BEGIN TEST //
-  if (elements[element.name]) {
-  // END TEST //
-    return Object.assign(elements[element.name](element), {type: element.name})
-  // BEGIN TEST //
+export default compileElement(layoutElements)
+
+export function compileElement (elements) {
+  return function (element) {
+    if (elements[element.name]) {
+      return Object.assign(elements[element.name](element), {type: element.name})
+    } else {
+      throw new Error(`Element <${element.name}> unkown in this context: ${elements.__context} (${Object.keys(elements)})`)
+    }
   }
-  // END TEST //
 }
