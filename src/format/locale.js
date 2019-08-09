@@ -3,6 +3,14 @@ import locales from '../locales'
 import styles from '../styles'
 
 // NOTICE CONST
+const FORM_FALLBACK = {
+  short: 'long',
+  symbol: 'short',
+  verb: 'long',
+  'verb-short': 'verb'
+}
+
+// NOTICE CONST
 // From https://github.com/citation-style-language/locales/blob/b5f4b87d7693f69a5697fc21e1b2b31dc6dc39b6/locales.json#L2-L47
 // Accessed 2017-11-11
 const primaryDialects = {
@@ -137,7 +145,6 @@ Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } 
 
     // TODO matching
 
-    // TODO handle form fallback
     // TODO gender + form
     // boolean short-circuiting: return gender term if possible, else regular term
     const value = (gender && term[gender]) || term[form]
@@ -145,6 +152,16 @@ Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } 
     if (value) {
       return plural !== undefined ? (plural ? value.multiple : value.single) : value.content
     }
+  }
+
+  if (form in FORM_FALLBACK) {
+    return this.getTerm(name, {
+      form: FORM_FALLBACK[form],
+      gender,
+      plural
+    })
+  } else {
+    return ''
   }
 }
 
