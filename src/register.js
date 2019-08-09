@@ -1,10 +1,8 @@
 import parseXml from './parse'
 
 class Register {
-  data = {}
-
-  constructor (data = {}) {
-    Object.assign(this.data, data)
+  constructor (data) {
+    this.data = data ? Object.assign({}, data) : {}
   }
 
   get (key) {

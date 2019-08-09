@@ -2,11 +2,6 @@ import styles from '../styles'
 import formats from './formats'
 
 class Formatter {
-  style
-  lang
-  format
-  locales
-
   constructor ({ style, lang, format }) {
     // TODO check
     this.style = style

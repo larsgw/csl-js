@@ -1,6 +1,5 @@
 import Formatter from './formatter'
 import conditionIsTrue from './condition'
-import logger from '../logger'
 
 const reduceStrings = list => {
   return list.reduce((array, element) => {
