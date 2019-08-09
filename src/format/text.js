@@ -228,7 +228,7 @@ const elements = {
       // TODO *any* of the children of the substitute, not all
       // TODO inherit name options
       // TODO suppress used variables
-      return context._formatChildren(element.options.substitute.content)
+      return context._formatChildren(data, element.options.substitute.content)
     }
   }
 }
