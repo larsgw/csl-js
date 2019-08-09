@@ -2,7 +2,7 @@ import Formatter from './formatter'
 
 // NOTICE const
 const LATIN_CYRILLIC_REGEX = /^(\P{Letter}|\p{Script_Extensions=Latin}|\p{Script_Extensions=Cyrillic})+$/u
-const INITIALIZABLE_NAME_PART_REGEX = /(\p{Letter})\p{Letter}*/gu
+const INITIALIZABLE_NAME_PART_REGEX = /((\p{Letter})\p{Letter}*)(\P{Letter}*)/gu
 
 const namePartOrders = [
   // Latin/Cyrillic
@@ -38,11 +38,51 @@ function getNamePartOrder (latin, form, nameAsSortOrder, demoteNonDroppingPartic
 }
 
 Formatter.prototype.formatNameList = function (variable, names, opts) {
-  // TODO et al
-  // TODO delimiter
-  let out = names
-    .map((name, index) => this.formatName(name, index, opts))
-    .join(opts.name?.delimiter || ', ') // NOTICE const
+  // TODO subsequent-author-substitute
+
+  let out = names.map((name, index) => this.formatName(name, index, opts))
+  let delimiterOpt
+
+  const etAl = this.getEtAlOptions(opts.name)
+  if (etAl.min >= out.length) {
+    delimiterOpt = 'delimiter-precedes-et-al'
+    out = out.slice(0, etAl.useFirst)
+
+    if (etAl.useLast === 'true' && (etAl.min - etAl.useFirst) > 2) { // NOTICE const
+      out.push('… ' + out.slice(-1)) // NOTICE const
+    } else {
+      // TODO et-al formatting
+      out.push(this.getTerm(opts['et-al']?.term))
+    }
+  } else if (out.length > 1) {
+    const last = out.pop()
+    const and = opts.name?.and === 'text' ? this.getTerm('and') : '&'
+    out.push(and + ' ' + last)
+  }
+
+  let delimiterAtEnd
+  switch (opts.name?.[delimiterOpt]) {
+    case 'never':
+      delimiterAtEnd = false
+      break
+    case 'always':
+      delimiterAtEnd = true
+      break
+    case 'after-inverted-name':
+      delimiterAtEnd = opts.name?.['name-as-sort-order'] === 'all' ||
+        (opts.name?.['name-as-sort-order'] === 'first' && out.length === 2)
+      break
+    case 'contextual':
+    default:
+      delimiterAtEnd = out.length > 2
+      break
+  }
+
+  if (delimiterAtEnd) {
+    out = out.join(opts.name?.delimiter || ', ')
+  } else {
+    out = out.slice(0, -1).join(opts.name?.delimiter || ', ') + out.slice(-1)
+  }
 
   if (opts.label) {
     let isPlural
@@ -84,23 +124,43 @@ Formatter.prototype.formatName = function (name, index, opts) {
       .filter(Boolean)
       .join(' ')
     )
+    .filter(Boolean)
     .join(opts.name?.['sort-separator'] || ', ') // NOTICE const
 }
 
-Formatter.prototype.formatNamePart = function (name, namePart, opts) {
-  if (namePart === 'given') {
-    return this.initializeName(name, opts.name?.initialize !== 'false', opts.name?.initializeWith)
-  } else {
-    return name
+Formatter.prototype.formatNamePart = function (namePart, name, opts) {
+  if (!name) {
+    return
   }
+
+  if (namePart === 'given') {
+    name = this.initializeName(
+      name,
+      opts.name?.['initialize-with'] && opts.name?.initialize !== 'false',
+      opts.name?.['initialize-with']
+    )
+  }
+
+  return name.trim()
 }
 
-Formatter.prototype.initializeName = function (name, initialize, initializeWith) {
-  return name.replace(INITIALIZABLE_NAME_PART_REGEX, (full, initial) => {
-    if (!initialize && full !== initial) {
-      return full
+// NOTICE const
+Formatter.prototype.initializeName = function (name, initialize, initializeWith = '') {
+  // TODO initialize-with-hyphen
+  return name.replace(INITIALIZABLE_NAME_PART_REGEX, (_, full, initial, rest) => {
+    rest = rest.replace(/[\s.]/g, '')
+    if (initialize || full === initial) {
+      return initial + initializeWith + rest
     } else {
-      return initial + initializeWith
+      return full + rest
     }
   })
+}
+
+Formatter.prototype.getEtAlOptions = function (opts) {
+  return {
+    min: +opts?.['et-al-min'],
+    useFirst: +opts?.['et-al-use-first'],
+    useLast: opts?.['et-al-use-last'] === 'true'
+  }
 }

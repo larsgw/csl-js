@@ -49,7 +49,7 @@ export const renderingElements = {
     const output = {}
 
     // select first content attribute
-    const contentType = Object.keys(attributes).filter(attribute => textContentAttributes.includes(attribute))[0]
+    const contentType = Object.keys(attributes).find(attribute => textContentAttributes.includes(attribute))
     output.contentType = contentType
     output.content = attributes[contentType]
 

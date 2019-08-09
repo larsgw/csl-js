@@ -228,7 +228,7 @@ const elements = {
       // TODO *any* of the children of the substitute, not all
       // TODO inherit name options
       // TODO suppress used variables
-      return context._formatChildren(element.options.substitute)
+      return context._formatChildren(element.options.substitute.content)
     }
   }
 }
@@ -288,6 +288,7 @@ Formatter.prototype.formatDatePart = function (name, value, form) {
     case 'numeric-leading-zeros':
       return paddedString
     case 'ordinal':
+      // TODO limit-day-ordinals-to-day-1
       return this.formatNumber(num, 'ordinal')
   }
 

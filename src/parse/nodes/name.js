@@ -37,9 +37,9 @@ const nameElements = {
   @attributes(ATTR.delimiter, ATTR.affix, ATTR.formatting, nameAttributes)
   name ({children}) {
     return {
-      content: arrayToObject(children, child => {
+      ...arrayToObject(children, child => {
         const value = compileNameElement(child)
-        return { key: value.name, value }
+        return { key: value.content, value }
       })
     }
   },
@@ -112,15 +112,12 @@ Object.assign(renderingElements, {
   // TODO display
   @attributes(ATTR.delimiter, ATTR.affix, ATTR.formatting)
   names ({ attributes, children }) {
-    const elements = xmlToObject(children.map(compileNameElement))
     return {
       content: attributes.variable.split(' '),
-      options: {
-        name: elements.name?.[0],
-        ['et-al']: elements['et-al']?.[0],
-        label: elements.label?.[0],
-        substitute: elements.substitute?.[0]
-      }
+      options: arrayToObject(children, child => {
+        const value = compileNameElement(child)
+        return { key: value.type, val: value }
+      })
     }
   }
 })
