@@ -6,6 +6,7 @@ import cLocale from './locale'
 import cLayout from './layout'
 import './date'
 import './choose'
+import './name'
 
 // TODO docs
 const cMacro = macro => ({ name: macro.attributes.name, make: cLayout(macro) })

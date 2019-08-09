@@ -216,6 +216,20 @@ const elements = {
   date (context, data, element) {
     const value = data[element.content]
     return value ? context.formatDate(value, element) : ''
+  },
+
+  // NAME
+  @add({mods: [formatting, delimiter, affix]})
+  names (context, data, element) {
+    const variables = element.content.filter(variable => data[variable])
+    if (variables.length) {
+      return variables.map(variable => context.formatNameList(variable, data[variable], element.options))
+    } else if (element.options.substitute) {
+      // TODO *any* of the children of the substitute, not all
+      // TODO inherit name options
+      // TODO suppress used variables
+      return context._formatChildren(element.options.substitute)
+    }
   }
 }
 

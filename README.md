@@ -11,12 +11,12 @@ Lightweight CSL Engine. WIP.
 
 ##### Table of Contents
 
-* [Get Started](#get-started)
-* [API](#api)
-    * [Registering/parsing locales & styles](#registering--parsing-locales---styles)
-    * [Formatter](#formatter)
-* [Features](#features)
-* [TODOs](#todos)
+  - [Get Started](#get-started)
+  - [API](#api)
+    - [Registering/parsing locales & styles](#registering--parsing-locales---styles)
+    - [Formatter](#formatter)
+  - [Features](#features)
+  - [TODOs](#todos)
 
 ## Get Started
 
@@ -68,20 +68,23 @@ formatter.formatCitation(data)
 
 ## Features
 
-* `cs:text`, `cs:number`, `cs:label`, `cs:choose`, `cs:group`, `cs:date`, `cs:layout`, `cs:macros`
-* locales
-* formatting, affixes, delimiter, strip-periods (mostly, anyway)
-* bibliography
+  - `cs:text`, `cs:number`, `cs:label`, `cs:group`, `cs:layout`, `cs:macros`
+  - `cs:choose` (with most conditions)
+  - basic `cs:names`
+  - basic `cs:date`
+  - locales
+  - formatting, affixes, delimiter, strip-periods (mostly, anyway)
+  - `cs:bibliography`, `cs:citation`
+  - test suite (the official one)
 
 ## Missing spec features
 
-* names
-* disambiguation
-* date ranges, BC
-* better number handling
-* `cs:citation`
-* sorting
-* reference manager
-* term genders
-* jsdoc and documentation & examples
-* test suite
+  - disambiguation
+  - date ranges, BC
+  - better number handling
+  - et-al support
+  - global and semi-local options
+  - sorting
+  - reference manager
+  - term genders
+  - jsdoc and documentation & examples
