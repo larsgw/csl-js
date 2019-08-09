@@ -25,6 +25,11 @@ const conditionChecker = {
 
   variable (condition, data, match) {
     return condition.split(' ')[match](variable => data[variable])
+  },
+
+  position (condition, data, match) {
+    // TODO
+    return false
   }
 }
 
