@@ -1,9 +1,10 @@
 // NOTICE CONST
-const numberRegex = /^([a-z_]*\d+\w*)((\s*[-&,]\s*)([a-z_]*\d+\w*))*$/i
+const NUMBER_PART_SEPARATION_REGEX = /\s*[-&,]\s*/g
+const NUMBER_PART_REGEX = /[a-z_]*\d+[a-z_]*/
 const matchToArrayMethod = { all: 'every', any: 'some', none: 'some' }
 
 // TODO disambiguate, locator, position
-const conditionChecker = {
+export const conditionChecker = {
   type (condition, data, match) {
     return condition.split(' ')[match](type => type === data.type)
   },
@@ -12,7 +13,8 @@ const conditionChecker = {
     return condition.split(' ')[match](variable => {
       const value = data[variable]
       if (typeof value === 'string') {
-        return numberRegex.test(value)
+        const parts = value.split(NUMBER_PART_SEPARATION_REGEX)
+        return parts.every(part => NUMBER_PART_REGEX.test(part))
       } else {
         return typeof value === 'number'
       }
@@ -33,9 +35,7 @@ const conditionChecker = {
   }
 }
 
-const resultIsTrue = result => result
-
-export default function conditionIsTrue (statement, data) {
+export function conditionIsTrue (statement, data) {
   const { conditions, match = 'all' } = statement
 
   // if no conditionals, it's the 'else' case
@@ -51,13 +51,13 @@ export default function conditionIsTrue (statement, data) {
 
   switch (match) {
     case 'any':
-      return results.some(resultIsTrue)
+      return results.some(Boolean)
 
     case 'none':
-      return !results.some(resultIsTrue)
+      return !results.some(Boolean)
 
     case 'all':
     default:
-      return results.every(resultIsTrue)
+      return results.every(Boolean)
   }
 }

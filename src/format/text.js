@@ -1,5 +1,5 @@
 import Formatter from './formatter'
-import conditionIsTrue from './condition'
+import { conditionIsTrue, conditionChecker } from './condition'
 
 const reduceStrings = list => {
   return list.reduce((array, element) => {
@@ -213,15 +213,17 @@ const elements = {
   number (context, data, element) {
     const {content, form} = element
     context._state.stack[0][content] = !!data[content]
-    const num = parseInt(data[content])
 
-    // TODO is-numeric
-    if (isNaN(num)) { return data[content] }
-
-    // TODO affixes
-    // TODO multiple numbers in a single field
-
-    return context.formatNumber(num, form)
+    if (conditionChecker['is-numeric'](content, data, 'every')) {
+      return data[content]
+        .toString()
+        .replace(/\s*-\s*/g, '-')
+        .replace(/\s*,\s*/g, ', ')
+        .replace(/\s*&\s*/g, ' & ')
+        .replace(/(?<![a-z])\d+(?![a-z])/gi, num => context.formatNumber(+num, form))
+    } else {
+      return data[content]
+    }
   },
 
   // DATE
