@@ -175,7 +175,7 @@ const elements = {
   @add({mods: [textCase, stripPeriods, formatting, affix]})
 
   label (context, data, element) {
-    const {content, form, plural} = element
+    const { content, form, plural } = element
 
     if (!data.hasOwnProperty(content)) { return }
 
@@ -187,13 +187,17 @@ const elements = {
       isPlural = false
     } else {
       const value = data[content]
-      // TODO not sure if those are parseInt-able
-      isPlural = value.startsWith('number-of-')
-        ? parseInt(value) > 1
-        : /[-&,]/.test(value)
+      if (content.startsWith('number-of-')) {
+        // TODO not sure if those are parseInt-able
+        isPlural = parseInt(value) > 1
+      } else if (Array.isArray(value)) {
+        isPlural = value.length > 1
+      } else {
+        return /[-&,]/.test(value)
+      }
     }
 
-    return context.getTerm(content, {form, plural: isPlural})
+    return context.getTerm(content, { form, plural: isPlural })
   },
 
   // NUMBER

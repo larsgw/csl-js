@@ -17,7 +17,7 @@ const cCitation = citation => {
   const children = xmlToObject(citation.children)
   return {
     // sort: cSort(children.sort[0]),
-    layout: cLayout(children.layout[0])
+    layout: children.layout && cLayout(children.layout[0])
   }
 }
 
@@ -26,7 +26,7 @@ const cBibliography = bibliography => {
   const children = xmlToObject(bibliography.children)
   return {
     // sort: cSort(children.sort[0]),
-    layout: cLayout(children.layout[0])
+    layout: children.layout && cLayout(children.layout[0])
   }
 }
 

@@ -85,23 +85,13 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
   }
 
   if (opts.label) {
-    let isPlural
-    switch (opts.label.plural) {
-      case 'never':
-        isPlural = false
-        break
-      case 'all':
-        isPlural = true
-        break
-      case 'contextual':
-      default:
-        isPlural = names.length > 1
-        break
-    }
-    const label = this.getTerm(variable, {
-      form: opts.label.form,
-      plural: isPlural
+    const label = this._format({
+      [variable]: names
+    }, {
+      content: variable,
+      ...opts.label
     })
+
     if (opts.labelBeforeName) {
       out = label + out
     } else {
