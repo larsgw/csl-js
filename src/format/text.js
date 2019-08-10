@@ -132,9 +132,10 @@ const simpleGroup = (context, data, element) => context._formatChildren(data, el
 
 const elements = {
   // LAYOUT
-  // TODO cs:citation layout
   @add({mods: [formatting, delimiter, affix]})
-  layout (...args) { return simpleGroup(...args) },
+  layout (context, data, element) {
+    return data.map(entry => context._formatChildren(entry, element.content))
+  },
 
   // GROUP
   // TODO empty if all cs:text s empty

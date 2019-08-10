@@ -26,12 +26,12 @@ function format (formatter, mode, data) {
   switch (mode) {
     case 'bibliography':
       return `<div class="csl-bib-body">
-  ${data.map(entry => `<div class="csl-bib-entry">${formatter.formatBibliography(entry)}</div>`).join(`
+  ${data.map(entry => `<div class="csl-bib-entry">${formatter.formatBibliography([entry])}</div>`).join(`
   `)}
 </div>`
 
     case 'citation':
-      return data.map(entry => formatter.formatCitation(entry)).join('')
+      return formatter.formatCitation(data)
   }
 }
 
