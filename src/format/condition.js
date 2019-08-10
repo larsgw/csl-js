@@ -5,7 +5,7 @@ const matchToArrayMethod = { all: 'every', any: 'some', none: 'some' }
 // TODO disambiguate, locator, position
 const conditionChecker = {
   type (condition, data, match) {
-    return match === 'some' ? condition.split(' ').includes(data.type) : false
+    return condition.split(' ')[match](type => type === data.type)
   },
 
   'is-numeric' (condition, data, match) {
