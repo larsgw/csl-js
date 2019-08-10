@@ -59,7 +59,7 @@ const dateElements = {
     const content = attributes.name
     const output = {
       content,
-      rangeDelimiter: attributes['range-delimiter'] || /* NOTICE const */ '–'
+      rangeDelimiter: attributes['range-delimiter'] ?? /* NOTICE const */ '–'
     }
 
     if (datePartFormValues[content].includes(attributes.form)) {

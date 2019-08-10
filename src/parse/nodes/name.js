@@ -63,7 +63,7 @@ const nameElements = {
    */
   @attributes(ATTR.formatting)
   'et-al' ({attributes}) {
-    return { content: attributes.term || 'et-al' }
+    return { content: attributes.term ?? 'et-al' }
   },
 
   /**

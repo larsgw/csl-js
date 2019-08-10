@@ -79,9 +79,9 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
   }
 
   if (delimiterAtEnd) {
-    out = out.join(opts.name?.delimiter || ', ')
+    out = out.join(opts.name?.delimiter ?? ', ')
   } else if (out.length > 1) {
-    out = out.slice(0, -1).join(opts.name?.delimiter || ', ') + ' ' + out.slice(-1)
+    out = out.slice(0, -1).join(opts.name?.delimiter ?? ', ') + ' ' + out.slice(-1)
   }
 
   if (opts.label) {
@@ -120,7 +120,7 @@ Formatter.prototype.formatName = function (name, index, opts) {
       .join(' ')
     )
     .filter(Boolean)
-    .join(opts.name?.['sort-separator'] || ', ') // NOTICE const
+    .join(opts.name?.['sort-separator'] ?? ', ') // NOTICE const
 }
 
 Formatter.prototype.formatNamePart = function (namePart, name, opts) {
@@ -128,19 +128,18 @@ Formatter.prototype.formatNamePart = function (namePart, name, opts) {
     return
   }
 
+  const shouldInitialize = opts.name && 'initialize-with' in opts.name && opts.name?.initialize !== 'false'
+  const initializeWith = opts.name?.['initialize-with'] ?? (shouldInitialize ? '' : ' ')
+
   if (namePart === 'given') {
-    name = this.initializeName(
-      name,
-      opts.name?.['initialize-with'] && opts.name?.initialize !== 'false',
-      opts.name?.['initialize-with']
-    )
+    name = this.initializeName(name, shouldInitialize, initializeWith)
   }
 
   return name
 }
 
 // NOTICE const
-Formatter.prototype.initializeName = function (name, initialize, initializeWith = '') {
+Formatter.prototype.initializeName = function (name, initialize, initializeWith) {
   // TODO initialize-with-hyphen
   return name.replace(INITIALIZABLE_NAME_PART_REGEX, (_, full, initial, rest) => {
     if (initialize || full === initial) {

@@ -67,7 +67,7 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
   const language = dialect.split('-')[0]
   const primaryDialect = primaryDialects[language]
 
-  const styleLocales = styles.get(this.style)?.locale || {}
+  const styleLocales = styles.get(this.style)?.locale ?? {}
 
   // Below code should work as described in:
   // http://docs.citationstyles.org/en/stable/specification.html#locale-fallback
@@ -147,10 +147,10 @@ Formatter.prototype.getTerm = function (name, { form = 'long', gender, plural } 
 
     // TODO gender + form
     // boolean short-circuiting: return gender term if possible, else regular term
-    const value = (gender && term[gender]) || term[form]
+    const value = (gender && term[gender]) ?? term[form]
 
     if (value) {
-      return (plural ? value.multiple : value.single) || value.content || ''
+      return (plural ? value.multiple : value.single) ?? value.content ?? ''
     }
   }
 
@@ -195,7 +195,7 @@ Formatter.prototype.getOrdinalSuffix = function (num, { form = 'numeric' } = {})
   } else {
     // CSL 1.0.1 mode
     // TODO
-    return this.getTerm(`ordinal-${paddedNum}`) || defaultSuffix
+    return this.getTerm(`ordinal-${paddedNum}`) ?? defaultSuffix
   }
 }
 

@@ -167,7 +167,7 @@ const elements = {
       case 'variable':
         const variable = element.form === 'short' && data[content + '-short'] ? content + '-short' : content
         context._state.stack[0][variable] = variable in data
-        return data[variable] || ''
+        return data[variable] ?? ''
       case 'term':
         return context.getTerm(content, element)
       case 'value':

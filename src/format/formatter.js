@@ -12,7 +12,7 @@ class Formatter {
     this._formatData = formats[format]
 
     if (!this.lang) {
-      this.lang = this._style['default-locale'] || 'en-US'
+      this.lang = this._style['default-locale'] ?? 'en-US'
     }
 
     this.locales = this.buildLocaleFallbackRoute()
