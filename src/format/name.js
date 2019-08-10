@@ -80,8 +80,8 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
 
   if (delimiterAtEnd) {
     out = out.join(opts.name?.delimiter || ', ')
-  } else {
-    out = out.slice(0, -1).join(opts.name?.delimiter || ', ') + out.slice(-1)
+  } else if (out.length > 1) {
+    out = out.slice(0, -1).join(opts.name?.delimiter || ', ') + ' ' + out.slice(-1)
   }
 
   if (opts.label) {
