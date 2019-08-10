@@ -143,9 +143,8 @@ Formatter.prototype.formatNamePart = function (namePart, name, opts) {
 Formatter.prototype.initializeName = function (name, initialize, initializeWith = '') {
   // TODO initialize-with-hyphen
   return name.replace(INITIALIZABLE_NAME_PART_REGEX, (_, full, initial, rest) => {
-    rest = rest.replace(/[\s.]/g, '')
     if (initialize || full === initial) {
-      return initial + initializeWith + rest
+      return initial + initializeWith + rest.replace(/[\s.]/g, '')
     } else {
       return full + rest
     }
