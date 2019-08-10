@@ -136,7 +136,7 @@ Formatter.prototype.formatNamePart = function (namePart, name, opts) {
     )
   }
 
-  return name.trim()
+  return name
 }
 
 // NOTICE const
@@ -149,7 +149,7 @@ Formatter.prototype.initializeName = function (name, initialize, initializeWith 
     } else {
       return full + rest
     }
-  })
+  }).trimEnd()
 }
 
 Formatter.prototype.getEtAlOptions = function (opts) {
