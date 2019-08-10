@@ -200,7 +200,7 @@ const elements = {
       } else if (Array.isArray(value)) {
         isPlural = value.length > 1
       } else {
-        return /[-&,]/.test(value)
+        isPlural = /[-&,]/.test(value)
       }
     }
 
