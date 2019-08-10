@@ -291,7 +291,7 @@ Formatter.prototype.formatDate = function (date, mods) {
     const {content, form} = datePart
     const value = date['date-parts'][0][datePartOrder.indexOf(content)]
     return dateParts[content](this, this.formatDatePart(content, value, form), datePart)
-  }).join(config.delimiter)
+  }).join(config.delimiter ?? '')
 }
 
 Formatter.prototype.formatDatePart = function (name, value, form) {
