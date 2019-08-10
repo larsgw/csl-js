@@ -18,13 +18,23 @@ class Formatter {
     this.locales = this.buildLocaleFallbackRoute()
   }
 
+  _formatLayout (data, layout) {
+    this._state = {
+      stack: [{}],
+      suppressed: new Set()
+    }
+    const output = this._format(data, layout)
+    delete this._state
+    return output
+  }
+
   formatBibliography (data) {
     // TODO
-    return this._format(data, this._style.bibliography.layout)
+    return this._formatLayout(data, this._style.bibliography.layout)
   }
 
   formatCitation (data) {
-    return this._format(data, this._style.citation.layout)
+    return this._formatLayout(data, this._style.citation.layout)
   }
 
   sort (data, mode) {

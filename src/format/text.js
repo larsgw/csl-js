@@ -21,7 +21,7 @@ const add = function ({mods = [], alias = []} = {}) {
       let output = formatter(context, data, element)
 
       for (const mod of mods) {
-        if (!output) { return '' }
+        if (!output || output.length === 0) { return '' }
         output = mod(context, data, element, output)
       }
 
@@ -138,9 +138,14 @@ const elements = {
   },
 
   // GROUP
-  // TODO empty if all cs:text s empty
   @add({mods: [formatting, delimiter, affix]})
-  group (...args) { return simpleGroup(...args) },
+  group (context, data, element) {
+    context._state.stack.unshift({})
+    const contents = context._formatChildren(data, element.content)
+    const variables = Object.values(context._state.stack.shift())
+    const render = variables.length === 0 || variables.some(Boolean)
+    return render ? contents : ''
+  },
 
   // MACRO / IF / ELSE-IF / ELSE
   @add({alias: ['if', 'else-if', 'else']})
@@ -160,7 +165,9 @@ const elements = {
 
     switch (contentType) {
       case 'variable':
-        return element.form === 'short' ? data[content + '-short'] || data[content] : data[content]
+        const variable = element.form === 'short' && data[content + '-short'] ? content + '-short' : content
+        context._state.stack[0][variable] = variable in data
+        return data[variable] || ''
       case 'term':
         return context.getTerm(content, element)
       case 'value':
@@ -205,6 +212,7 @@ const elements = {
 
   number (context, data, element) {
     const {content, form} = element
+    context._state.stack[0][content] = !!data[content]
     const num = parseInt(data[content])
 
     // TODO is-numeric
@@ -220,13 +228,16 @@ const elements = {
   @add({mods: [affix, delimiter, formatting, textCase]})
   date (context, data, element) {
     const value = data[element.content]
+    context._state.stack[0][element.content] = !!value
     return value ? context.formatDate(value, element) : ''
   },
 
   // NAME
   @add({mods: [formatting, delimiter, affix]})
   names (context, data, element) {
-    const variables = element.content.filter(variable => data[variable])
+    const variables = element.content.filter(variable => {
+      return context._state.stack[0][variable] = !!data[variable]
+    })
     if (variables.length) {
       return variables.map(variable => context.formatNameList(variable, data[variable], element.options))
     } else if (element.options.substitute) {
