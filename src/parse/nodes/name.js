@@ -39,7 +39,7 @@ const nameElements = {
     return {
       ...arrayToObject(children, child => {
         const value = compileNameElement(child)
-        return { key: value.content, value }
+        return { key: value.content, val: value }
       })
     }
   },
@@ -112,12 +112,18 @@ Object.assign(renderingElements, {
   // TODO display
   @attributes(ATTR.delimiter, ATTR.affix, ATTR.formatting)
   names ({ attributes, children }) {
+    let labelBeforeName
+    const options = arrayToObject(children, child => {
+      if (child.name === 'label' && labelBeforeName !== false) { labelBeforeName = true }
+      if (child.name === 'name' && labelBeforeName !== true) { labelBeforeName = false }
+      const value = compileNameElement(child)
+      return { key: value.type, val: value }
+    })
+    options.labelBeforeName = labelBeforeName
+
     return {
       content: attributes.variable.split(' '),
-      options: arrayToObject(children, child => {
-        const value = compileNameElement(child)
-        return { key: value.type, val: value }
-      })
+      options
     }
   }
 })
