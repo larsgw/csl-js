@@ -1,6 +1,35 @@
 import styles from '../styles'
 import formats from './formats'
 
+class State {
+  constructor () {
+    this.stack = [{}]
+    this.suppressed = new Set()
+  }
+
+  useVariable (variable, data) {
+    if (!(variable in data) || this.suppressed.has(variable)) {
+      this.stack[0][variable] = false
+      return undefined
+    }
+
+    this.stack[0][variable] = true
+    return data[variable]
+  }
+
+  suppressVariable (variable) {
+    this.suppressed.add(variable)
+  }
+
+  pushStack () {
+    this.stack.unshift({})
+  }
+
+  popStack () {
+    return this.stack.shift()
+  }
+}
+
 class Formatter {
   constructor ({ style, lang, format }) {
     // TODO check
@@ -19,10 +48,7 @@ class Formatter {
   }
 
   _formatLayout (data, layout) {
-    this._state = {
-      stack: [{}],
-      suppressed: new Set()
-    }
+    this._state = new State()
     const output = this._format(data, layout)
     delete this._state
     return output

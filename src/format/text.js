@@ -140,9 +140,9 @@ const elements = {
   // GROUP
   @add({mods: [formatting, delimiter, affix]})
   group (context, data, element) {
-    context._state.stack.unshift({})
+    context._state.pushStack()
     const contents = context._formatChildren(data, element.content)
-    const variables = Object.values(context._state.stack.shift())
+    const variables = Object.values(context._state.popStack())
     const render = variables.length === 0 || variables.some(Boolean)
     return render ? contents : ''
   },
@@ -166,8 +166,7 @@ const elements = {
     switch (contentType) {
       case 'variable':
         const variable = element.form === 'short' && data[content + '-short'] ? content + '-short' : content
-        context._state.stack[0][variable] = variable in data
-        return data[variable] ?? ''
+        return context._state.useVariable(variable, data) ?? ''
       case 'term':
         return context.getTerm(content, element)
       case 'value':
@@ -211,42 +210,60 @@ const elements = {
   @add({mods: [textCase, formatting, affix]})
 
   number (context, data, element) {
-    const {content, form} = element
-    context._state.stack[0][content] = !!data[content]
+    const { content, form } = element
+    const variable = context._state.useVariable(content, data)
 
     if (conditionChecker['is-numeric'](content, data, 'every')) {
-      return data[content]
+      return variable
         .toString()
         .replace(/\s*-\s*/g, '-')
         .replace(/\s*,\s*/g, ', ')
         .replace(/\s*&\s*/g, ' & ')
         .replace(/(?<![a-z])\d+(?![a-z])/gi, num => context.formatNumber(+num, form))
     } else {
-      return data[content]
+      return variable
     }
   },
 
   // DATE
   @add({mods: [affix, delimiter, formatting, textCase]})
   date (context, data, element) {
-    const value = data[element.content]
-    context._state.stack[0][element.content] = !!value
+    const value = context._state.useVariable(element.content, data)
     return value ? context.formatDate(value, element) : ''
   },
 
   // NAME
   @add({mods: [formatting, delimiter, affix]})
   names (context, data, element) {
-    const variables = element.content.filter(variable => {
-      return context._state.stack[0][variable] = !!data[variable]
-    })
+    const variables = element.content.filter(variable => context._state.useVariable(variable, data))
     if (variables.length) {
       return variables.map(variable => context.formatNameList(variable, data[variable], element.options))
     } else if (element.options.substitute) {
-      // TODO *any* of the children of the substitute, not all
-      // TODO inherit name options
-      // TODO suppress used variables
-      return context._formatChildren(data, element.options.substitute.content)
+      const candidates = element.options.substitute.content.slice()
+      let output
+      let stack
+      while (!output && candidates.length) {
+        context._state.pushStack()
+        let candidate = candidates.shift()
+        if (candidate.type === 'names' && !candidate.options) {
+          candidate = {
+            ...candidate,
+            options: {
+              name: element.options.name,
+              'et-al': element.options['et-al']
+            }
+          }
+        }
+        output = context._format(data, candidate)
+        stack = context._state.popStack()
+      }
+      if (output) {
+        Object.assign(context._state.stack[0], stack)
+        Object.keys(stack).map(variable => context._state.suppressVariable(variable))
+        return output
+      } else {
+        return ''
+      }
     }
   }
 }
@@ -354,10 +371,5 @@ Formatter.prototype._formatChildren = function (data, children) {
 }
 
 Formatter.prototype._format = function (data, element) {
-  // TODO clean up (this is for TESTING purposes)
-  if (element && typeof elements[element.type] === 'function') {
-    return elements[element.type](this, data, element)
-  } else {
-    return  ''
-  }
+  return elements[element.type](this, data, element)
 }
