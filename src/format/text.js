@@ -13,10 +13,9 @@ const reduceStrings = list => {
   }, [])
 }
 
-const add = function ({mods = [], alias = []} = {}) {
+function modifiers (...mods) {
   return (target, key, descriptor) => {
     const formatter = descriptor.value
-
     descriptor.value = (context, data, element) => {
       let output = formatter(context, data, element)
 
@@ -36,9 +35,13 @@ const add = function ({mods = [], alias = []} = {}) {
       // return `<span data-node="${key}">${output}</span>`
       return output + ''
     }
+  }
+}
 
-    for (const prop of alias) {
-      Object.defineProperty(target, prop, descriptor)
+function alias (...aliases) {
+  return (target, key, descriptor) => {
+    for (const alias of aliases) {
+      Object.defineProperty(target, alias, descriptor)
     }
     return descriptor
   }
@@ -132,13 +135,14 @@ const simpleGroup = (context, data, element) => context._formatChildren(data, el
 
 const elements = {
   // LAYOUT
-  @add({mods: [formatting, delimiter, affix]})
+  @modifiers(formatting, delimiter, affix)
   layout (context, data, element) {
     return data.map(entry => context._formatChildren(entry, element.content))
   },
 
-  // GROUP
-  @add({mods: [formatting, delimiter, affix]})
+  // GROUP / MACRO
+  @modifiers(formatting, delimiter, affix)
+  @alias('macro')
   group (context, data, element) {
     context._state.pushStack()
     const contents = context._formatChildren(data, element.content)
@@ -147,19 +151,19 @@ const elements = {
     return render ? contents : ''
   },
 
-  // MACRO / IF / ELSE-IF / ELSE
-  @add({alias: ['if', 'else-if', 'else']})
-  macro (...args) { return simpleGroup(...args) },
+  // IF / ELSE-IF / ELSE
+  @alias('else-if', 'else')
+  if (...args) { return simpleGroup(...args) },
 
   // CHOOSE
-  @add()
+  @modifiers()
   choose (context, data, element) {
-    return context._format(data, element.content.find(condition => conditionIsTrue(condition, data)))
+    const option = element.content.find(condition => conditionIsTrue(condition, data))
+    return option ? context._format(data, option) : ''
   },
 
   // TEXT
-  @add({mods: [textCase, stripPeriods, quotes, formatting, affix]})
-
+  @modifiers(textCase, stripPeriods, quotes, formatting, affix)
   text (context, data, element) {
     const {content, contentType} = element
 
@@ -178,8 +182,7 @@ const elements = {
   },
 
   // LABEL
-  @add({mods: [textCase, stripPeriods, formatting, affix]})
-
+  @modifiers(textCase, stripPeriods, formatting, affix)
   label (context, data, element) {
     const { content, form, plural } = element
 
@@ -207,8 +210,7 @@ const elements = {
   },
 
   // NUMBER
-  @add({mods: [textCase, formatting, affix]})
-
+  @modifiers(textCase, formatting, affix)
   number (context, data, element) {
     const { content, form } = element
     const variable = context._state.useVariable(content, data)
@@ -226,14 +228,14 @@ const elements = {
   },
 
   // DATE
-  @add({mods: [affix, delimiter, formatting, textCase]})
+  @modifiers(affix, delimiter, formatting, textCase)
   date (context, data, element) {
     const value = context._state.useVariable(element.content, data)
     return value ? context.formatDate(value, element) : ''
   },
 
   // NAME
-  @add({mods: [formatting, delimiter, affix]})
+  @modifiers(formatting, delimiter, affix)
   names (context, data, element) {
     const variables = element.content.filter(variable => context._state.useVariable(variable, data))
     if (variables.length) {
@@ -269,12 +271,13 @@ const elements = {
 }
 
 const dateParts = {
-  @add({alias: ['day'], mods: [textCase, formatting, affix]})
+  @modifiers(textCase, formatting, affix)
+  @alias('day')
   year (context, data) {
     return data
   },
 
-  @add({mods: [textCase, stripPeriods, formatting, affix]})
+  @modifiers(textCase, stripPeriods, formatting, affix)
   month (context, data) {
     return data
   }
