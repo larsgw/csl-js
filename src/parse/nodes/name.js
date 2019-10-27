@@ -114,8 +114,8 @@ Object.assign(renderingElements, {
   names ({ attributes, children }) {
     let labelBeforeName
     const options = arrayToObject(children, child => {
-      if (child.name === 'label' && labelBeforeName !== false) { labelBeforeName = true }
-      if (child.name === 'name' && labelBeforeName !== true) { labelBeforeName = false }
+      if (child.name === 'label' && labelBeforeName === undefined) { labelBeforeName = true }
+      if (child.name === 'name' && labelBeforeName === undefined) { labelBeforeName = false }
       const value = compileNameElement(child)
       return { key: value.type, val: value }
     })
