@@ -1,7 +1,7 @@
 import variables from '../variables'
 
 function renderNameVariable (variable, data) {
-  return data[variable] && this.formatNameList(data[variable], {
+  return data[variable] && this.formatNameList(variable, data[variable], {
     name: {
       form: 'long',
       'name-as-sort-order': 'all'
@@ -47,10 +47,10 @@ function comparisonMethod (key) {
   }
 }
 
-function renderKey (key, data) {
+function renderKey (data, key) {
   if (key.contentType === 'macro') {
-    return context._format(data, this._style.macro[key.content])
-  } else if (key.contentType === 'key') {
+    return this._formatLayout(data, this._style.macro[key.content])
+  } else if (key.contentType === 'variable') {
     return renderVariable.call(this, key.content, data)
   }
 }
