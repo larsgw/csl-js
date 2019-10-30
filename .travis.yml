@@ -4,7 +4,7 @@ branches:
     - /^(fix|feature|dev)\//
 language: node_js
 node_js:
-  - "node"
+  - 12
 sudo: false
 install:
   - npm install
