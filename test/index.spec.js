@@ -23,10 +23,11 @@ function parse (text) {
 }
 
 function format (formatter, mode, data) {
+  const sorted = formatter.sort(data, mode)
   switch (mode) {
     case 'bibliography':
       return `<div class="csl-bib-body">
-  ${data.map(entry => `<div class="csl-entry">${formatter.formatBibliography([entry])}</div>`).join(`
+  ${sorted.map(entry => `<div class="csl-entry">${formatter.formatBibliography([entry])}</div>`).join(`
   `)}
 </div>`
 
