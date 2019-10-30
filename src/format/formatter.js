@@ -1,5 +1,6 @@
 import styles from '../styles'
 import formats from './formats'
+import { sort } from './sort'
 
 class State {
   constructor () {
@@ -56,15 +57,21 @@ class Formatter {
 
   formatBibliography (data) {
     // TODO
-    return this._formatLayout(data, this._style.bibliography.layout)
+    return this._formatLayout(
+      this.sort(data, 'bibliography'),
+      this._style.bibliography.layout
+    )
   }
 
   formatCitation (data) {
-    return this._formatLayout(data, this._style.citation.layout)
+    return this._formatLayout(
+      this.sort(data, 'citation'),
+      this._style.citation.layout
+    )
   }
 
   sort (data, mode) {
-    // TODO
+    return sort.call(this, data, this._style[mode]?.sort)
   }
 }
 

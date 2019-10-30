@@ -1,0 +1,218 @@
+{
+  "abstract": {
+    "type": "literal"
+  },
+  "annote": {
+    "type": "literal"
+  },
+  "archive": {
+    "type": "literal"
+  },
+  "archive_location": {
+    "type": "literal"
+  },
+  "archive-place": {
+    "type": "literal"
+  },
+  "authority": {
+    "type": "literal"
+  },
+  "call-number": {
+    "type": "literal"
+  },
+  "citation-label": {
+    "type": "literal"
+  },
+  "citation-number": {
+    "type": "literal"
+  },
+  "collection-title": {
+    "type": "literal"
+  },
+  "container-title": {
+    "type": "literal"
+  },
+  "container-title-short": {
+    "type": "literal"
+  },
+  "dimensions": {
+    "type": "literal"
+  },
+  "DOI": {
+    "type": "literal"
+  },
+  "event": {
+    "type": "literal"
+  },
+  "event-place": {
+    "type": "literal"
+  },
+  "first-reference-note-number": {
+    "type": "literal"
+  },
+  "genre": {
+    "type": "literal"
+  },
+  "ISBN": {
+    "type": "literal"
+  },
+  "ISSN": {
+    "type": "literal"
+  },
+  "jurisdiction": {
+    "type": "literal"
+  },
+  "keyword": {
+    "type": "literal"
+  },
+  "locator": {
+    "type": "literal"
+  },
+  "medium": {
+    "type": "literal"
+  },
+  "note": {
+    "type": "literal"
+  },
+  "original-publisher": {
+    "type": "literal"
+  },
+  "original-publisher-place": {
+    "type": "literal"
+  },
+  "original-title": {
+    "type": "literal"
+  },
+  "page": {
+    "type": "literal"
+  },
+  "page-first": {
+    "type": "literal"
+  },
+  "PMCID": {
+    "type": "literal"
+  },
+  "PMID": {
+    "type": "literal"
+  },
+  "publisher": {
+    "type": "literal"
+  },
+  "publisher-place": {
+    "type": "literal"
+  },
+  "references": {
+    "type": "literal"
+  },
+  "reviewed-title": {
+    "type": "literal"
+  },
+  "scale": {
+    "type": "literal"
+  },
+  "section": {
+    "type": "literal"
+  },
+  "source": {
+    "type": "literal"
+  },
+  "status": {
+    "type": "literal"
+  },
+  "title": {
+    "type": "literal"
+  },
+  "title-short": {
+    "type": "literal"
+  },
+  "URL": {
+    "type": "literal"
+  },
+  "version": {
+    "type": "literal"
+  },
+  "year-suffix": {
+    "type": "literal"
+  },
+  "chapter-number": {
+    "type": "number"
+  },
+  "collection-number": {
+    "type": "number"
+  },
+  "edition": {
+    "type": "number"
+  },
+  "issue": {
+    "type": "number"
+  },
+  "number": {
+    "type": "number"
+  },
+  "number-of-pages": {
+    "type": "number"
+  },
+  "number-of-volumes": {
+    "type": "number"
+  },
+  "volume": {
+    "type": "number"
+  },
+  "accessed": {
+    "type": "date"
+  },
+  "container": {
+    "type": "date"
+  },
+  "event-date": {
+    "type": "date"
+  },
+  "issued": {
+    "type": "date"
+  },
+  "original-date": {
+    "type": "date"
+  },
+  "submitted": {
+    "type": "date"
+  },
+  "author": {
+    "type": "name"
+  },
+  "collection-editor": {
+    "type": "name"
+  },
+  "composer": {
+    "type": "name"
+  },
+  "container-author": {
+    "type": "name"
+  },
+  "director": {
+    "type": "name"
+  },
+  "editor": {
+    "type": "name"
+  },
+  "editorial-director": {
+    "type": "name"
+  },
+  "illustrator": {
+    "type": "name"
+  },
+  "interviewer": {
+    "type": "name"
+  },
+  "original-author": {
+    "type": "name"
+  },
+  "recipient": {
+    "type": "name"
+  },
+  "reviewed-author": {
+    "type": "name"
+  },
+  "translator": {
+    "type": "name"
+  }
+}

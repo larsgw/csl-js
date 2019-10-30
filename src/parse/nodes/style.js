@@ -1,7 +1,7 @@
 import { arrayToObject, xmlToObject } from '../toObject'
 import cMetadata from './info'
 import cLocale from './locale'
-// import cSort from './sort'
+import cSort from './sort'
 
 import cLayout from './layout'
 import './date'
@@ -16,7 +16,7 @@ const cMacro = macro => ({ name: macro.attributes.name, make: cLayout(macro) })
 const cCitation = citation => {
   const children = xmlToObject(citation.children)
   return {
-    // sort: cSort(children.sort[0]),
+    sort: children.sort && cSort(children.sort[0]),
     layout: children.layout && cLayout(children.layout[0])
   }
 }
@@ -25,7 +25,7 @@ const cCitation = citation => {
 const cBibliography = bibliography => {
   const children = xmlToObject(bibliography.children)
   return {
-    // sort: cSort(children.sort[0]),
+    sort: children.sort && cSort(children.sort[0]),
     layout: children.layout && cLayout(children.layout[0])
   }
 }
