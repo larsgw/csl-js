@@ -137,6 +137,12 @@ const elements = {
   // LAYOUT
   @modifiers(formatting, delimiter, affix)
   layout (context, data, element) {
+    if (context._state.mode === 'bibliography') {
+      return `<div class="csl-bib-body">
+  ${data.map(entry => `<div class="csl-entry">${context._formatChildren(entry, element.content)}</div>`).join('\n')}
+</div>`
+    }
+
     return data.map(entry => context._formatChildren(entry, element.content))
   },
 

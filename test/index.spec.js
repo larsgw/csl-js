@@ -23,17 +23,7 @@ function parse (text) {
 }
 
 function format (formatter, mode, data) {
-  const sorted = formatter.sort(data, mode)
-  switch (mode) {
-    case 'bibliography':
-      return `<div class="csl-bib-body">
-  ${sorted.map(entry => `<div class="csl-entry">${formatter.formatBibliography([entry])}</div>`).join(`
-  `)}
-</div>`
-
-    case 'citation':
-      return formatter.formatCitation(data)
-  }
+  return formatter.formatNew(data, mode)
 }
 
 const ROOT_PATH = path.join(__dirname, '../fixtures/processor-tests/humans')

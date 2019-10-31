@@ -93,6 +93,7 @@ class Formatter {
     this._state = new State()
     this._state.pushGlobalOptions(this._style.options)
     this._state.pushGlobalOptions(this._style[mode].options)
+    this._state.mode = mode
 
     data = this.sort(data, mode)
     const output = this._format(data, this._style[mode].layout)

@@ -49,7 +49,7 @@ function comparisonMethod (key) {
 
 function renderKey (data, key) {
   if (key.contentType === 'macro') {
-    return this._formatLayout(data, this._style.macro[key.content])
+    return this._format(data, this._style.macro[key.content])
   } else if (key.contentType === 'variable') {
     return renderVariable.call(this, key.content, data)
   }
