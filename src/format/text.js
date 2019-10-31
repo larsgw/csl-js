@@ -200,7 +200,7 @@ const elements = {
   layout (context, data, element) {
     if (context._state.mode === 'bibliography') {
       return `<div class="csl-bib-body">
-  ${data.map(entry => `<div class="csl-entry">${context._formatChildren(entry, element.content)}</div>`).join('\n')}
+  ${data.map(entry => `<div class="csl-entry">${context._formatChildren(entry, element.content)}</div>`).join('\n  ')}
 </div>`
     }
 
