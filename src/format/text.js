@@ -99,12 +99,73 @@ const quotes = (self, data, {quotes}, input) => {
   // TODO
   // see stripPeriods; also because it requires lazy/contextual evaluation
   // itself
+
+  // BEGIN TESTING
+  if (!quotes) { return input }
+  return self.getTerm('open-quote') + input + self.getTerm('close-quote')
+  // END TESTING
+
   return input
 }
 
 const textCase = (self, data, {'text-case': textCase}, input) => {
   // TODO
   // see stripPeriods; this one should however be contained
+
+  // TODO non-English
+  // TODO last word is no stopword
+
+  // BEGIN TESTING
+  if (!textCase) { return input }
+
+  if (input === input.toUpperCase() && (textCase === 'sentence' || textCase === 'title')) {
+    input = input.toLowerCase()
+  }
+
+  // NOTICE const
+  const WORD_SPLIT = /(<span class="nocase">)|(<\/span>)|(\p{Letter}+)|(.)/gu
+  const STOPWORDS = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'down', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'onto', 'or', 'over', 'so', 'the', 'till', 'to', 'up', 'via', 'with', 'yet']
+  function capitalize (word) { return word[0].toUpperCase() + word.slice(1) }
+
+  let nocase = 0
+  let wordIndex = 0
+  return Array.from(input.matchAll(WORD_SPLIT)).map(([token, open, close, word, rest]) => {
+    if (open) {
+      nocase++
+    } else if (close) {
+      nocase--
+    } else if (rest) {
+      // NOTICE const
+      if (rest === ':') { wordIndex = 0 }
+      return rest
+    } else if (word) {
+      const lowercase = word !== word.toUpperCase()
+      const firstWord = wordIndex === 0
+      wordIndex++
+      // console.log(+nocase, +lowercase, +firstWord, +STOPWORDS.includes(word), word)
+
+      if (nocase) { return word }
+      switch (textCase) {
+        case 'lowercase':
+          return word.toLowerCase()
+        case 'uppercase':
+          return word.toUpperCase()
+        case 'sentence':
+        case 'capitalize-first':
+          return lowercase && firstWord ? capitalize(word) : word
+        case 'capitalize-all':
+          return lowercase ? capitalize(word) : word
+        case 'title':
+          return lowercase && (firstWord || !STOPWORDS.includes(word)) ? capitalize(word) : word
+        default:
+          return word
+      }
+    }
+
+    return ''
+  }).join('') ?? input
+  // END TESTING
+
   return input
 }
 
