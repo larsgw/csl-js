@@ -71,7 +71,10 @@ formatter.formatCitation(data)
   - `cs:text`, `cs:number`, `cs:label`, `cs:group`, `cs:layout`, `cs:macros`
   - `cs:choose` (with most conditions)
   - basic `cs:names`
+  - basic et-al support
   - basic `cs:date`
+  - sorting
+  - global and semi-local options (but not necessarily implementations)
   - locales
   - formatting, affixes, delimiter, strip-periods (mostly, anyway)
   - `cs:bibliography`, `cs:citation`
@@ -82,9 +85,6 @@ formatter.formatCitation(data)
   - disambiguation
   - date ranges, BC
   - better number handling
-  - et-al support
-  - global and semi-local options
-  - sorting
   - reference manager
   - term genders
   - jsdoc and documentation & examples
