@@ -48,11 +48,13 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
     delimiterOpt = 'delimiter-precedes-et-al'
     out = out.slice(0, etAl.useFirst)
 
-    if (etAl.useLast === 'true' && (etAl.min - etAl.useFirst) > 2) { // NOTICE const
-      out.push('… ' + out.slice(-1)) // NOTICE const
+    if (etAl.useLast && (etAl.min - etAl.useFirst) >= 2) {
+      // NOTICE const
+      out.push('… ' + out.slice(-1))
     } else {
       // TODO et-al formatting
-      out.push(this.getTerm(opts['et-al']?.term))
+      // NOTICE const
+      out.push(this.getTerm(opts['et-al']?.term ?? 'et-al'))
     }
   } else if (out.length > 1) {
     const last = out.pop()
