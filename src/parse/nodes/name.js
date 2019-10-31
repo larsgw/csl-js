@@ -10,10 +10,10 @@ const nameAttributes = {
   delimiter: true,
   'delimiter-precedes-et-al': ['contextual', 'after-inverted-name', 'always', 'never'],
   'delimiter-precedes-last': ['contextual', 'after-inverted-name', 'always', 'never'],
-  'et-al-min': ['true', 'false'],
-  'et-al-use-first': ['false', 'true'],
-  'et-al-subsequent-min': ['false', 'true'],
-  'et-al-subsequent-use-first': ['false', 'true'],
+  'et-al-min': true,
+  'et-al-use-first': true,
+  'et-al-subsequent-min': true,
+  'et-al-subsequent-use-first': true,
   'et-al-use-last': ['false', 'true'],
 
   // Only for personal names (not 'literal')
