@@ -17,20 +17,22 @@ const cCitation = citation => {
   const children = xmlToObject(citation.children)
   return {
     sort: children.sort && cSort(children.sort[0]),
-    layout: children.layout && cLayout(children.layout[0])
+    layout: children.layout && cLayout(children.layout[0]),
+    options: citation.attributes
   }
 }
 
-// TODO options: Bibliography-specific Options
+// TODO options: Bibliography-specific Options, Inheritable name options
 const cBibliography = bibliography => {
   const children = xmlToObject(bibliography.children)
   return {
     sort: children.sort && cSort(children.sort[0]),
-    layout: children.layout && cLayout(children.layout[0])
+    layout: children.layout && cLayout(children.layout[0]),
+    options: bibliography.attributes
   }
 }
 
-// TODO root-level config
+// TODO root-level config, Inheritable name options
 // TODO csl version
 const parse = function (style) {
   const elements = xmlToObject(style.children)
@@ -56,7 +58,7 @@ const parse = function (style) {
     ? cBibliography(elements.bibliography[0])
     : {}
 
-  Object.assign(output, style.attributes)
+  output.options = style.attributes
 
   return output
 }

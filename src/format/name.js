@@ -40,10 +40,10 @@ function getNamePartOrder (latin, form, nameAsSortOrder, demoteNonDroppingPartic
 Formatter.prototype.formatNameList = function (variable, names, opts) {
   // TODO subsequent-author-substitute
 
-  let out = names.map((name, index) => this.formatName(name, index, opts))
+  let out = names.map((name, index) => this.formatName(name, index))
   let delimiterOpt
 
-  const etAl = this.getEtAlOptions(opts.name)
+  const etAl = this.getEtAlOptions()
   if (etAl.min >= out.length) {
     delimiterOpt = 'delimiter-precedes-et-al'
     out = out.slice(0, etAl.useFirst)
@@ -56,12 +56,13 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
     }
   } else if (out.length > 1) {
     const last = out.pop()
-    const and = opts.name?.and === 'text' ? this.getTerm('and') : '&'
+    // NOTICE const
+    const and = this._state.resolveGlobalOption('and') === 'text' ? this.getTerm('and') : '&'
     out.push(and + ' ' + last)
   }
 
   let delimiterAtEnd
-  switch (opts.name?.[delimiterOpt]) {
+  switch (this._state.resolveGlobalOption(delimiterOpt)) {
     case 'never':
       delimiterAtEnd = false
       break
@@ -69,8 +70,8 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
       delimiterAtEnd = true
       break
     case 'after-inverted-name':
-      delimiterAtEnd = opts.name?.['name-as-sort-order'] === 'all' ||
-        (opts.name?.['name-as-sort-order'] === 'first' && out.length === 2)
+      delimiterAtEnd = this._state.resolveGlobalOption('name-as-sort-order') === 'all' ||
+        (this._state.resolveGlobalOption('name-as-sort-order') === 'first' && out.length === 2)
       break
     case 'contextual':
     default:
@@ -78,10 +79,12 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
       break
   }
 
+  // NOTICE const
+  const delimiter = this._state.resolveGlobalOption('name-delimiter') ?? ', '
   if (delimiterAtEnd) {
-    out = out.join(opts.name?.delimiter ?? ', ')
+    out = out.join(delimiter)
   } else if (out.length > 1) {
-    out = out.slice(0, -1).join(opts.name?.delimiter ?? ', ') + ' ' + out.slice(-1)
+    out = out.slice(0, -1).join(delimiter) + ' ' + out.slice(-1)
   }
 
   if (opts.label) {
@@ -102,37 +105,44 @@ Formatter.prototype.formatNameList = function (variable, names, opts) {
   return out
 }
 
-Formatter.prototype.formatName = function (name, index, opts) {
+Formatter.prototype.formatName = function (name, index) {
   if (name.literal) {
     return name.literal
   }
 
   const latin = LATIN_CYRILLIC_REGEX.test(name)
-  const asSortOrder = opts.name?.['name-as-sort-order'] === 'all' || (opts.name?.['name-as-sort-order'] === 'first' && index === 0)
-  const namePartOrder = getNamePartOrder(latin, opts.name?.form, asSortOrder, 'never')
+  const asSortOrder = this._state.resolveGlobalOption('name-as-sort-order')
+  const namePartOrder = getNamePartOrder(
+    latin,
+    this._state.resolveGlobalOption('name-form'),
+    asSortOrder === 'all' || (asSortOrder === 'first' && index === 0),
+    'never'
+  )
+
+  // NOTICE const
+  const sortSeparator = this._state.resolveGlobalOption('sort-separator') ?? ', '
 
   // TODO name part formatting
-
   return namePartOrder
     .map(nameParts => nameParts
-      .map(namePart => this.formatNamePart(namePart, name[namePart], opts))
+      .map(namePart => this.formatNamePart(namePart, name[namePart]))
       .filter(Boolean)
       .join(' ')
     )
     .filter(Boolean)
-    .join(opts.name?.['sort-separator'] ?? ', ') // NOTICE const
+    .join(sortSeparator)
 }
 
-Formatter.prototype.formatNamePart = function (namePart, name, opts) {
+Formatter.prototype.formatNamePart = function (namePart, name) {
   if (!name) {
     return
   }
 
-  const shouldInitialize = opts.name && 'initialize-with' in opts.name && opts.name?.initialize !== 'false'
-  const initializeWith = opts.name?.['initialize-with'] ?? (shouldInitialize ? '' : ' ')
+  const initializeWith = this._state.resolveGlobalOption('initialize-with')
+  const shouldInitialize = initializeWith && this._state.resolveGlobalOption('initialize') !== 'false'
 
   if (namePart === 'given') {
-    name = this.initializeName(name, shouldInitialize, initializeWith)
+    name = this.initializeName(name, shouldInitialize, initializeWith ?? (shouldInitialize ? '' : ' '))
   }
 
   return name
@@ -150,10 +160,10 @@ Formatter.prototype.initializeName = function (name, initialize, initializeWith)
   }).trimEnd()
 }
 
-Formatter.prototype.getEtAlOptions = function (opts) {
+Formatter.prototype.getEtAlOptions = function () {
   return {
-    min: +opts?.['et-al-min'],
-    useFirst: +opts?.['et-al-use-first'],
-    useLast: opts?.['et-al-use-last'] === 'true'
+    min: +this._state.resolveGlobalOption('et-al-min'),
+    useFirst: +this._state.resolveGlobalOption('et-al-use-first'),
+    useLast: this._state.resolveGlobalOption('et-al-use-last') === 'true'
   }
 }

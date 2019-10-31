@@ -56,8 +56,17 @@ function renderKey (data, key) {
 }
 
 function compare (a, b, key) {
+  this._state.pushGlobalOptions({
+    'et-al-min': key['names-min'],
+    'et-al-subsequent-min': key['names-min'],
+    'et-al-use-first': key['names-use-first'],
+    'et-al-subsequent-use-first': key['names-use-first'],
+    'et-al-use-last': key['names-use-last'],
+    'et-al-subsequent-use-last': key['names-use-last']
+  })
   const aRender = renderKey.call(this, a, key)
   const bRender = renderKey.call(this, b, key)
+  this._state.popGlobalOptions()
 
   if (aRender == null) { return 1 }
   if (bRender == null) { return -1 }

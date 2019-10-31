@@ -6,6 +6,7 @@ class State {
   constructor () {
     this.stack = [{}]
     this.suppressed = new Set()
+    this.globalOptions = []
   }
 
   useVariable (variable, data) {
@@ -28,6 +29,22 @@ class State {
 
   popStack () {
     return this.stack.shift()
+  }
+
+  pushGlobalOptions (options) {
+    this.globalOptions.unshift(options)
+  }
+
+  popGlobalOptions () {
+    return this.globalOptions.shift()
+  }
+
+  resolveGlobalOption (option) {
+    for (const options of this.globalOptions) {
+      if (option in options) {
+        return options[option]
+      }
+    }
   }
 }
 
@@ -57,17 +74,31 @@ class Formatter {
 
   formatBibliography (data) {
     // TODO
-    return this._formatLayout(
-      this.sort(data, 'bibliography'),
-      this._style.bibliography.layout
-    )
+    // return this._formatLayout(
+    //   this.sort(data, 'bibliography'),
+    //   this._style.bibliography.layout
+    // )
+    return this.formatNew(data, 'bibliography')
   }
 
   formatCitation (data) {
-    return this._formatLayout(
-      this.sort(data, 'citation'),
-      this._style.citation.layout
-    )
+    // return this._formatLayout(
+    //   this.sort(data, 'citation'),
+    //   this._style.citation.layout
+    // )
+    return this.formatNew(data, 'citation')
+  }
+
+  formatNew (data, mode) {
+    this._state = new State()
+    this._state.pushGlobalOptions(this._style.options)
+    this._state.pushGlobalOptions(this._style[mode].options)
+
+    data = this.sort(data, mode)
+    const output = this._format(data, this._style[mode].layout)
+
+    delete this._state
+    return output
   }
 
   sort (data, mode) {

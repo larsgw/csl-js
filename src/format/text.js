@@ -234,17 +234,37 @@ const elements = {
     return value ? context.formatDate(value, element) : ''
   },
 
+  // TODO split up
   // NAME
   @modifiers(formatting, delimiter, affix)
   names (context, data, element) {
+    context._state.pushGlobalOptions({
+      and: element.options.name.and,
+      'delimiter-precedes-et-al': element.options.name['delimiter-precedes-et-al'],
+      'delimiter-precedes-last': element.options.name['delimiter-precedes-last'],
+      'et-al-min': element.options.name['et-al-min'],
+      'et-al-use-first': element.options.name['et-al-use-first'],
+      'et-al-use-last': element.options.name['et-al-use-last'],
+      'et-al-subsequent-min': element.options.name['et-al-subsequent-min'],
+      'et-al-subsequent-use-first': element.options.name['et-al-subsequent-use-first'],
+      initialize: element.options.name.initialize,
+      'initialize-with': element.options.name['initialize-with'],
+      'name-as-sort-order': element.options.name['name-as-sort-order'],
+      'sort-separator': element.options.name['sort-separator'],
+      'name-form': element.options.name.form,
+      'name-delimiter': element.options.name.delimiter,
+      'names-delimiter': element.options.delimiter
+    })
+    let output
+
     const variables = element.content.filter(variable => context._state.useVariable(variable, data))
     if (variables.length) {
-      return variables.map(variable => context.formatNameList(variable, data[variable], element.options))
+      output = variables.map(variable => context.formatNameList(variable, data[variable], element.options))
     } else if (element.options.substitute) {
       const candidates = element.options.substitute.content.slice()
-      let output
+      let candidateOutput
       let stack
-      while (!output && candidates.length) {
+      while (!candidateOutput && candidates.length) {
         context._state.pushStack()
         let candidate = candidates.shift()
         if (candidate.type === 'names' && !candidate.options) {
@@ -256,17 +276,20 @@ const elements = {
             }
           }
         }
-        output = context._format(data, candidate)
+        candidateOutput = context._format(data, candidate)
         stack = context._state.popStack()
       }
-      if (output) {
+      if (candidateOutput) {
         Object.assign(context._state.stack[0], stack)
         Object.keys(stack).map(variable => context._state.suppressVariable(variable))
-        return output
+        output = candidateOutput
       } else {
-        return ''
+        output = ''
       }
     }
+
+    context._state.popGlobalOptions()
+    return output
   }
 }
 
