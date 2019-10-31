@@ -306,20 +306,20 @@ const elements = {
   @modifiers(formatting, delimiter, affix)
   names (context, data, element) {
     context._state.pushGlobalOptions({
-      and: element.options.name.and,
-      'delimiter-precedes-et-al': element.options.name['delimiter-precedes-et-al'],
-      'delimiter-precedes-last': element.options.name['delimiter-precedes-last'],
-      'et-al-min': element.options.name['et-al-min'],
-      'et-al-use-first': element.options.name['et-al-use-first'],
-      'et-al-use-last': element.options.name['et-al-use-last'],
-      'et-al-subsequent-min': element.options.name['et-al-subsequent-min'],
-      'et-al-subsequent-use-first': element.options.name['et-al-subsequent-use-first'],
-      initialize: element.options.name.initialize,
-      'initialize-with': element.options.name['initialize-with'],
-      'name-as-sort-order': element.options.name['name-as-sort-order'],
-      'sort-separator': element.options.name['sort-separator'],
-      'name-form': element.options.name.form,
-      'name-delimiter': element.options.name.delimiter,
+      and: element.options.name?.and,
+      'delimiter-precedes-et-al': element.options.name?.['delimiter-precedes-et-al'],
+      'delimiter-precedes-last': element.options.name?.['delimiter-precedes-last'],
+      'et-al-min': element.options.name?.['et-al-min'],
+      'et-al-use-first': element.options.name?.['et-al-use-first'],
+      'et-al-use-last': element.options.name?.['et-al-use-last'],
+      'et-al-subsequent-min': element.options.name?.['et-al-subsequent-min'],
+      'et-al-subsequent-use-first': element.options.name?.['et-al-subsequent-use-first'],
+      initialize: element.options.name?.initialize,
+      'initialize-with': element.options.name?.['initialize-with'],
+      'name-as-sort-order': element.options.name?.['name-as-sort-order'],
+      'sort-separator': element.options.name?.['sort-separator'],
+      'name-form': element.options.name?.form,
+      'name-delimiter': element.options.name?.delimiter,
       'names-delimiter': element.options.delimiter
     })
     let output
