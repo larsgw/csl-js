@@ -41,7 +41,7 @@ class State {
 
   resolveGlobalOption (option) {
     for (const options of this.globalOptions) {
-      if (option in options) {
+      if (options[option] !== undefined) {
         return options[option]
       }
     }
