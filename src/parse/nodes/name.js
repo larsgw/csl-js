@@ -1,6 +1,6 @@
 import { attributes, ATTR } from '../attributes'
 import { renderingElements, compileRenderingElements, compileElement } from './layout'
-import { xmlToObject, arrayToObject } from '../toObject'
+import { arrayToObject } from '../toObject'
 
 const nameLabelFormValues = ['long', 'short', 'symbol', 'verb', 'verb-short']
 const labelPluralValues = ['contextual', 'always', 'never']
@@ -35,7 +35,7 @@ const nameElements = {
    * special: see nameAttributes
    */
   @attributes(ATTR.delimiter, ATTR.affix, ATTR.formatting, nameAttributes)
-  name ({children}) {
+  name ({ children }) {
     return {
       ...arrayToObject(children, child => {
         const value = compileNameElement(child)
@@ -52,7 +52,7 @@ const nameElements = {
    * NOTE: affixes: given = given (+ dropping-particle for inverted names); family = family, non-dropping-particle (+ suffix for non-inverted names)
    */
   @attributes(ATTR.formatting, ATTR.textCase, ATTR.affix)
-  'name-part' ({attributes}) {
+  'name-part' ({ attributes }) {
     return { content: attributes.name }
   },
 
@@ -62,7 +62,7 @@ const nameElements = {
    * options: formatting
    */
   @attributes(ATTR.formatting)
-  'et-al' ({attributes}) {
+  'et-al' ({ attributes }) {
     return { content: attributes.term ?? 'et-al' }
   },
 
@@ -75,7 +75,7 @@ const nameElements = {
    * NOTE: between (name & et-al) and substitute
    */
   @attributes(ATTR.affix, ATTR.formatting, ATTR.stripPeriods, ATTR.textCase)
-  label ({attributes}) {
+  label ({ attributes }) {
     const output = {}
     if (nameLabelFormValues.includes(attributes.form)) {
       output.form = attributes.form
@@ -93,7 +93,7 @@ const nameElements = {
    * NOTE: uses only or first non-empty rendering element
    * NOTE: suppresses substituted variables
    */
-  substitute ({children}) {
+  substitute ({ children }) {
     return { content: children.map(compileRenderingElements) }
   }
 }

@@ -47,6 +47,7 @@ export function conditionIsTrue (statement, data) {
     if (typeof conditionChecker[condition] === 'function') {
       return conditionChecker[condition](conditions[condition], data, matchToArrayMethod[match])
     }
+    return undefined
   }).filter(result => result !== undefined)
 
   switch (match) {

@@ -62,15 +62,15 @@ const joinAsArray = function (array, delimiter) {
   return joined
 }
 
-const affix = (self, data, {prefix = '', suffix = ''}, input) => [].concat(prefix, input, suffix)
-const delimiter = (self, data, {delimiter = ''}, input) => joinAsArray(input, delimiter)
+const affix = (self, data, { prefix = '', suffix = '' }, input) => [].concat(prefix, input, suffix)
+const delimiter = (self, data, { delimiter = '' }, input) => joinAsArray(input, delimiter)
 
 // NOTICE const
 const formattingAttributes = ['font-style', 'font-variant', 'font-weight', 'text-decoration', 'vertical-align']
 
 const formatting = (self, data, element, input) => {
   for (const attribute of formattingAttributes) {
-    if (!element.hasOwnProperty(attribute) || !self._formatData[attribute]) { continue }
+    if (!Object.prototype.hasOwnProperty.call(element, attribute) || !self._formatData[attribute]) { continue }
 
     const value = element[attribute]
     const text = self._formatData[attribute][value]
@@ -79,7 +79,7 @@ const formatting = (self, data, element, input) => {
   return input
 }
 
-const stripPeriods = (self, data, {'strip-periods': stripPeriods}, input) => {
+const stripPeriods = (self, data, { 'strip-periods': stripPeriods }, input) => {
   if (stripPeriods !== 'true') { return input }
 
   // TODO
@@ -95,7 +95,7 @@ const stripPeriods = (self, data, {'strip-periods': stripPeriods}, input) => {
   return input
 }
 
-const quotes = (self, data, {quotes}, input) => {
+const quotes = (self, data, { quotes }, input) => {
   // TODO
   // see stripPeriods; also because it requires lazy/contextual evaluation
   // itself
@@ -105,10 +105,10 @@ const quotes = (self, data, {quotes}, input) => {
   return self.getTerm('open-quote') + input + self.getTerm('close-quote')
   // END TESTING
 
-  return input
+  return input // eslint-disable-line
 }
 
-const textCase = (self, data, {'text-case': textCase}, input) => {
+const textCase = (self, data, { 'text-case': textCase }, input) => {
   // TODO
   // see stripPeriods; this one should however be contained
 
@@ -166,7 +166,7 @@ const textCase = (self, data, {'text-case': textCase}, input) => {
   }).join('') ?? input
   // END TESTING
 
-  return input
+  return input // eslint-disable-line
 }
 
 // TODO display
@@ -180,11 +180,11 @@ const textCase = (self, data, {'text-case': textCase}, input) => {
 //      new issues require lazy evaluation of middleware, which
 //      wouldn't work with the logging purposes of these functions.
 
-const DEBUG_group = (self, data, element, input) => {
+const DEBUG_group = (self, data, element, input) => { // eslint-disable-line
   logger.log(element.type, input)
   return input
 }
-const DEBUG_text = (self, data, element, input) => {
+const DEBUG_text = (self, data, element, input) => { // eslint-disable-line
   logger.log(element.type, element.contentType, element.content, input)
   return input
 }
@@ -232,19 +232,21 @@ const elements = {
   // TEXT
   @modifiers(textCase, stripPeriods, quotes, formatting, affix)
   text (context, data, element) {
-    const {content, contentType} = element
+    const { content, contentType } = element
 
     switch (contentType) {
-      case 'variable':
+      case 'variable': {
         const variable = element.form === 'short' && data[content + '-short'] ? content + '-short' : content
         return context._state.useVariable(variable, data) ?? ''
+      }
       case 'term':
         return context.getTerm(content, element)
       case 'value':
         return content
-      case 'macro':
+      case 'macro': {
         const macro = context._style.macro[content]
         return macro ? context._format(data, macro) : ''
+      }
     }
   },
 
@@ -253,7 +255,7 @@ const elements = {
   label (context, data, element) {
     const { content, form, plural } = element
 
-    if (!data.hasOwnProperty(content)) { return }
+    if (!Object.prototype.hasOwnProperty.call(data, content)) { return }
 
     let isPlural
 
@@ -384,9 +386,9 @@ Formatter.prototype.formatDate = function (date, mods) {
   let config
 
   if (mods.localised) {
-    const {form, dateParts} = mods
+    const { form, dateParts } = mods
     const localeConfig = this.getDateConfig(form)
-    config = {...localeConfig}
+    config = { ...localeConfig }
 
     config.datePartConfig = config.datePartConfig.slice().filter(datePart => dateParts.includes(datePart.content))
     // TODO copy local datepart config
@@ -398,7 +400,7 @@ Formatter.prototype.formatDate = function (date, mods) {
   const datePartOrder = ['year', 'month', 'day']
 
   return config.datePartConfig.map(datePart => {
-    const {content, form} = datePart
+    const { content, form } = datePart
     const value = date['date-parts'][0][datePartOrder.indexOf(content)]
     return dateParts[content](this, this.formatDatePart(content, value, form), datePart)
   }).join(config.delimiter ?? '')
@@ -421,7 +423,7 @@ Formatter.prototype.formatDatePart = function (name, value, form) {
   }
 
   if (name === 'month') {
-    return this.getTerm(`month-${paddedString}`, {form})
+    return this.getTerm(`month-${paddedString}`, { form })
   } else if (form === 'year') {
     return form === 'short' ? string.slice(-2) : string
   }
@@ -437,9 +439,9 @@ Formatter.prototype.formatNumber = function (num, form) {
   switch (form) {
     case 'long-ordinal':
     case 'ordinal':
-      return num + this.getOrdinalSuffix(num, {form})
+      return num + this.getOrdinalSuffix(num, { form })
 
-    case 'roman':
+    case 'roman': {
       // NOTICE CONST
       const numerals = [['m', 1000], ['cm', 900], ['d', 500], ['c', 100], ['xc', 90], ['l', 50], ['xl', 40], ['x', 10], ['ix', 9], ['v', 5], ['iv', 4], ['i', 1]]
 
@@ -452,6 +454,7 @@ Formatter.prototype.formatNumber = function (num, form) {
         }
       }
       return output
+    }
 
     case 'numeric':
     default:

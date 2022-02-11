@@ -35,7 +35,7 @@ export function attributes (...sets) {
       const output = {}
 
       for (const prop in set) {
-        if (element.attributes.hasOwnProperty(prop)) {
+        if (Object.prototype.hasOwnProperty.call(element.attributes, prop)) {
           const value = element.attributes[prop]
           if (set[prop] === true || set[prop].includes(value)) {
             output[prop] = value

@@ -19,7 +19,7 @@ class Register {
   }
 
   has (key) {
-    return this.data.hasOwnProperty(key)
+    return Object.prototype.hasOwnProperty.call(this.data, key)
   }
 
   delete (key) {

@@ -10,7 +10,7 @@ export function arrayToObject (array, callback) {
 
 export function xmlToObject (elements) {
   return elements.reduce((index, element) => {
-    if (!index.hasOwnProperty(element.name)) {
+    if (!Object.prototype.hasOwnProperty.call(index, element.name)) {
       index[element.name] = []
     }
 

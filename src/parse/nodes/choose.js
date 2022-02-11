@@ -1,4 +1,3 @@
-import { attributes, ATTR } from '../attributes'
 import { renderingElements, compileRenderingElements, compileElement } from './layout'
 
 // CHOOSE
@@ -7,7 +6,7 @@ import { renderingElements, compileRenderingElements, compileElement } from './l
 const conditionalElements = {
   __context: 'conditionalElements',
 
-  if ({ attributes: {match, ...conditions}, children }) {
+  if ({ attributes: { match, ...conditions }, children }) {
     return { content: children.map(compileRenderingElements), match, conditions }
   },
 
@@ -30,7 +29,7 @@ Object.assign(renderingElements, {
    * conditions: disambiguate, is-numeric, is-uncertain-date, locator, position, type, variable
    * match: all | any | none
    */
-  choose ({children}) {
+  choose ({ children }) {
     return { content: children.map(compileConditionalElement) }
   }
 })

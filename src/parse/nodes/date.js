@@ -26,7 +26,7 @@ const dateElements = {
    */
   // TODO display
   @attributes(ATTR.affix, ATTR.delimiter, ATTR.formatting, ATTR.textCase)
-  date ({attributes, children}) {
+  date ({ attributes, children }) {
     const localised = attributes.form && dateFormValues.includes(attributes.form)
     const output = { localised, content: attributes.variable }
 
@@ -55,7 +55,7 @@ const dateElements = {
    * NOTE: strip-periods on month
    */
   @attributes(ATTR.affix, ATTR.formatting, ATTR.textCase, ATTR.stripPeriods)
-  'date-part' ({attributes}) {
+  'date-part' ({ attributes }) {
     const content = attributes.name
     const output = {
       content,

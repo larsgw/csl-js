@@ -32,7 +32,7 @@ export const renderingElements = {
   // TODO display
   @attributes(ATTR.affix, ATTR.delimiter, ATTR.formatting)
   group (group) {
-    return {content: group.children.map(compileRenderingElements)}
+    return { content: group.children.map(compileRenderingElements) }
   },
 
   // TEXT
@@ -45,7 +45,7 @@ export const renderingElements = {
    */
   // TODO display
   @attributes(ATTR.affix, ATTR.formatting, ATTR.stripPeriods, ATTR.quotes, ATTR.textCase)
-  text ({attributes}) {
+  text ({ attributes }) {
     const output = {}
 
     // select first content attribute
@@ -77,8 +77,8 @@ export const renderingElements = {
    * NOTE: empty if variable is
    */
   @attributes(ATTR.affix, ATTR.formatting, ATTR.stripPeriods, ATTR.textCase)
-  label ({attributes}) {
-    const output = {content: attributes.variable}
+  label ({ attributes }) {
+    const output = { content: attributes.variable }
     if (labelFormValues.includes(attributes.form)) {
       output.form = attributes.form
     }
@@ -101,8 +101,8 @@ export const renderingElements = {
    */
   // TODO display
   @attributes(ATTR.affix, ATTR.formatting, ATTR.textCase)
-  number ({attributes}) {
-    const output = {content: attributes.variable}
+  number ({ attributes }) {
+    const output = { content: attributes.variable }
     if (numberFormValues.includes(attributes.form)) {
       output.form = attributes.form
     }
@@ -140,7 +140,7 @@ export default compileElement(layoutElements)
 export function compileElement (elements) {
   return function (element) {
     if (elements[element.name]) {
-      return Object.assign(elements[element.name](element), {type: element.name})
+      return Object.assign(elements[element.name](element), { type: element.name })
     } else {
       throw new Error(`Element <${element.name}> unkown in this context: ${elements.__context} (${Object.keys(elements)})`)
     }

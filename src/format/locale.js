@@ -14,50 +14,50 @@ const FORM_FALLBACK = {
 // From https://github.com/citation-style-language/locales/blob/b5f4b87d7693f69a5697fc21e1b2b31dc6dc39b6/locales.json#L2-L47
 // Accessed 2017-11-11
 const primaryDialects = {
-  'af': 'af-ZA',
-  'ar': 'ar',
-  'bg': 'bg-BG',
-  'ca': 'ca-AD',
-  'cs': 'cs-CZ',
-  'cy': 'cy-GB',
-  'da': 'da-DK',
-  'de': 'de-DE',
-  'el': 'el-GR',
-  'en': 'en-US',
-  'es': 'es-ES',
-  'et': 'et-EE',
-  'eu': 'eu',
-  'fa': 'fa-IR',
-  'fi': 'fi-FI',
-  'fr': 'fr-FR',
-  'he': 'he-IL',
-  'hr': 'hr-HR',
-  'hu': 'hu-HU',
-  'id': 'id-ID',
-  'is': 'is-IS',
-  'it': 'it-IT',
-  'ja': 'ja-JP',
-  'km': 'km-KH',
-  'ko': 'ko-KR',
-  'lt': 'lt-LT',
-  'lv': 'lv-LV',
-  'mn': 'mn-MN',
-  'nb': 'nb-NO',
-  'nl': 'nl-NL',
-  'nn': 'nn-NO',
-  'pl': 'pl-PL',
-  'pt': 'pt-PT',
-  'ro': 'ro-RO',
-  'ru': 'ru-RU',
-  'sk': 'sk-SK',
-  'sl': 'sl-SI',
-  'sr': 'sr-RS',
-  'sv': 'sv-SE',
-  'th': 'th-TH',
-  'tr': 'tr-TR',
-  'uk': 'uk-UA',
-  'vi': 'vi-VN',
-  'zh': 'zh-CN'
+  af: 'af-ZA',
+  ar: 'ar',
+  bg: 'bg-BG',
+  ca: 'ca-AD',
+  cs: 'cs-CZ',
+  cy: 'cy-GB',
+  da: 'da-DK',
+  de: 'de-DE',
+  el: 'el-GR',
+  en: 'en-US',
+  es: 'es-ES',
+  et: 'et-EE',
+  eu: 'eu',
+  fa: 'fa-IR',
+  fi: 'fi-FI',
+  fr: 'fr-FR',
+  he: 'he-IL',
+  hr: 'hr-HR',
+  hu: 'hu-HU',
+  id: 'id-ID',
+  is: 'is-IS',
+  it: 'it-IT',
+  ja: 'ja-JP',
+  km: 'km-KH',
+  ko: 'ko-KR',
+  lt: 'lt-LT',
+  lv: 'lv-LV',
+  mn: 'mn-MN',
+  nb: 'nb-NO',
+  nl: 'nl-NL',
+  nn: 'nn-NO',
+  pl: 'pl-PL',
+  pt: 'pt-PT',
+  ro: 'ro-RO',
+  ru: 'ru-RU',
+  sk: 'sk-SK',
+  sl: 'sl-SI',
+  sr: 'sr-RS',
+  sv: 'sv-SE',
+  th: 'th-TH',
+  tr: 'tr-TR',
+  uk: 'uk-UA',
+  vi: 'vi-VN',
+  zh: 'zh-CN'
 }
 
 Formatter.prototype.buildLocaleFallbackRoute = function () {
@@ -80,20 +80,20 @@ Formatter.prototype.buildLocaleFallbackRoute = function () {
   // if the main locale is a language (e.g. 'en'), use the primary
   // dialect ('en-US').
   if (dialect === language) {
-    if (styleLocales.hasOwnProperty(primaryDialect)) {
+    if (Object.prototype.hasOwnProperty.call(styleLocales, primaryDialect)) {
       localeFallbackRoute.push(styleLocales[primaryDialect])
     }
   } else {
-    if (styleLocales.hasOwnProperty(dialect)) {
+    if (Object.prototype.hasOwnProperty.call(styleLocales, dialect)) {
       localeFallbackRoute.push(styleLocales[dialect])
     }
   }
 
   // Always use the default & langauge-style locales for the style
-  if (styleLocales.hasOwnProperty(language)) {
+  if (Object.prototype.hasOwnProperty.call(styleLocales, language)) {
     localeFallbackRoute.push(styleLocales[language])
   }
-  if (styleLocales.hasOwnProperty('undefined')) {
+  if (Object.prototype.hasOwnProperty.call(styleLocales, 'undefined')) {
     localeFallbackRoute.push(styleLocales.undefined)
   }
 

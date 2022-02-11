@@ -1,14 +1,14 @@
 import { attributes, ATTR } from '../attributes'
-import {arrayToObject, xmlToObject} from '../toObject'
+import { arrayToObject, xmlToObject } from '../toObject'
 import cMetadata from './info'
 
 // TODO docs
 
 const c = {
   @attributes(ATTR.formatting, ATTR.textCase, ATTR.affix, ATTR.stripPeriods)
-  datePart ({attributes}) {
-    const {name, form, 'range-delimiter': rangeDelimiter} = attributes
-    const output = {content: name}
+  datePart ({ attributes }) {
+    const { name, form, 'range-delimiter': rangeDelimiter } = attributes
+    const output = { content: name }
 
     if (form) { output.form = form }
     if (rangeDelimiter) { output.rangeDelimiter = rangeDelimiter }
@@ -20,20 +20,20 @@ const c = {
   },
 
   @attributes(ATTR.formatting, ATTR.textCase, ATTR.delimiter)
-  date ({attributes, children}) {
-    const {form: name, delimiter} = attributes
-    const output = {name, datePartConfig: children.map(c.datePart)}
+  date ({ attributes, children }) {
+    const { form: name/*, delimiter */ } = attributes
+    const output = { name, datePartConfig: children.map(c.datePart) }
 
     return output
   }
 }
 
 const cTerm = term => {
-  const {name, form = 'long', match, gender, 'gender-form': genderForm} = term.attributes
-  let value = {}
+  const { name, form = 'long', match, gender, 'gender-form': genderForm } = term.attributes
+  const value = {}
 
   if (term.children && term.children.length) {
-    const {single, multiple} = xmlToObject(term.children)
+    const { single, multiple } = xmlToObject(term.children)
     value.single = single[0].content
     value.multiple = multiple[0].content
   } else if ('content' in term) {
@@ -47,13 +47,13 @@ const cTerm = term => {
     value.gender = gender
   }
 
-  return {name, form, value, genderForm}
+  return { name, form, value, genderForm }
 }
 
 const mergeTerms = terms => {
   const target = {}
-  for (let {name, form, value, genderForm} of terms) {
-    if (!target.hasOwnProperty(name)) {
+  for (const { name, form, value, genderForm } of terms) {
+    if (!Object.prototype.hasOwnProperty.call(target, name)) {
       target[name] = {}
     }
 
@@ -71,7 +71,7 @@ const mergeTerms = terms => {
 // TODO csl version
 const parse = function (locale) {
   const elements = xmlToObject(locale.children)
-  const output = {lang: locale.attributes['xml:lang']}
+  const output = { lang: locale.attributes['xml:lang'] }
 
   if (elements.info) {
     output.info = cMetadata(elements.info[0])
@@ -80,7 +80,7 @@ const parse = function (locale) {
     output.term = mergeTerms(elements.terms[0].children.map(cTerm))
   }
   if (elements.date) {
-    output.date = arrayToObject(elements.date.map(c.date), ({name, ...options}) => ({key: name, val: options}))
+    output.date = arrayToObject(elements.date.map(c.date), ({ name, ...options }) => ({ key: name, val: options }))
   }
   if (elements['style-options']) {
     output.styleOptions = elements['style-options'][0].attributes
