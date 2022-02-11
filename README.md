@@ -40,8 +40,8 @@ const { Formatter, locales, styles } = require('csl-js')
 const style = await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/styles@master/apa.csl')).text()
 styles.set('apa', style)
 
-const style = await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text()
-locales.set('en-US', parsed)
+const locale = await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text()
+locales.set('en-US', locale)
 ```
 
 ### `Formatter`
