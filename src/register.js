@@ -1,8 +1,14 @@
 import parseXml from './parse'
 
 class Register {
-  constructor (data) {
-    this.data = data ? Object.assign({}, data) : {}
+  constructor (entries) {
+    this.data = {}
+
+    if (Array.isArray(entries)) {
+      for (const [key, value] of entries) {
+        this.set(key, value)
+      }
+    }
   }
 
   get (key) {
@@ -14,10 +20,6 @@ class Register {
     return this
   }
 
-  add (...args) {
-    return this.set(...args)
-  }
-
   has (key) {
     return Object.prototype.hasOwnProperty.call(this.data, key)
   }
@@ -27,7 +29,7 @@ class Register {
     return this
   }
 
-  list () {
+  keys () {
     return Object.keys(this.data)
   }
 }

@@ -32,7 +32,7 @@ const ROOT_PATH = path.join(__dirname, '../fixtures/processor-tests/humans')
 
 describe('fixtures', function () {
   before('loading locale', async function () {
-    locales.add('en-US', await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text())
+    locales.set('en-US', await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text())
   })
 
   for (const fixturePath of fs.readdirSync(ROOT_PATH)) {
@@ -48,7 +48,7 @@ describe('fixtures', function () {
     else if (!['bibliography', 'citation'].includes(fixture.mode)) continue
 
     it(fixtureName, function () {
-      styles.add(fixtureName, fixture.csl)
+      styles.set(fixtureName, fixture.csl)
       const engine = new Formatter({ style: fixtureName, format: 'html' })
       const result = format(engine, fixture.mode, JSON.parse(fixture.input))
       assert.strictEqual(result, fixture.result)
