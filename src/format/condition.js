@@ -31,7 +31,7 @@ export const conditionChecker = {
 
   position (condition, data, match) {
     // TODO
-    return false
+    return condition.split(' ')[match](position => position === 'first')
   }
 }
 
