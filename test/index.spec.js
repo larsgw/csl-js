@@ -30,6 +30,9 @@ function format (formatter, mode, data) {
 
 const ROOT_PATH = path.join(__dirname, '../fixtures/processor-tests/humans')
 
+const FORBIDDEN_SECTIONS = ['bibentries', 'bibsection', 'citation-items', 'citations']
+const ALLOWED_MODES = ['bibliography', 'citation']
+
 describe('fixtures', function () {
   before('loading locale', async function () {
     locales.set('en-US', await (await fetch('https://cdn.jsdelivr.net/gh/citation-style-language/locales@master/locales-en-US.xml')).text())
@@ -37,17 +40,16 @@ describe('fixtures', function () {
 
   for (const fixturePath of fs.readdirSync(ROOT_PATH)) {
     const fixtureName = path.basename(fixturePath, path.extname(fixturePath))
-    const fixture = parse(fs.readFileSync(path.join(ROOT_PATH, fixturePath), 'utf8'))
-
-    if ([
-      'bibentries',
-      'bibsection',
-      'citation-items',
-      'citations'
-    ].some(section => section in fixture)) continue
-    else if (!['bibliography', 'citation'].includes(fixture.mode)) continue
 
     it(fixtureName, function () {
+      const fixture = parse(fs.readFileSync(path.join(ROOT_PATH, fixturePath), 'utf8'))
+
+      if (FORBIDDEN_SECTIONS.some(section => section in fixture)) {
+        this.skip()
+      } else if (!ALLOWED_MODES.includes(fixture.mode)) {
+        this.skip()
+      }
+
       styles.set(fixtureName, fixture.csl)
       const engine = new Formatter({ style: fixtureName, format: 'html' })
       const result = format(engine, fixture.mode, JSON.parse(fixture.input))
